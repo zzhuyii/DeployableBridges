@@ -6,8 +6,6 @@ Created on Mon Jul 28 13:42:18 2025
 """
 
 import numpy as np
-from scipy.sparse import csc_matrix
-from scipy.sparse.linalg import spsolve
 
 class Solver_NR_Loading:
     """Newton-Raphson Implicit Solver for structural analysis with incremental loading"""
