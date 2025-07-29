@@ -8,7 +8,7 @@ from Assembly_KirigamiTruss import Assembly_KirigamiTruss
 from Plot_KirigamiTruss import Plot_KirigamiTruss
 from Solver_NR_Loading import Solver_NR_Loading
 
-def SolveBridgeDeformation(N,load):    
+def SolveBridgeDeformation(N,load,view1,view2):    
     
     # Define Geometry
     L = 1
@@ -235,7 +235,9 @@ def SolveBridgeDeformation(N,load):
     plots = Plot_KirigamiTruss()
     plots.assembly = assembly
     
-    plots.display_range = np.array([-1, L*(N+1), -1, 2, -1, 2])
+    plots.display_range = np.array([-1, L*(N+1)*1.1, -1, 2, -1, 2])
+    plots.view_angle1=view1
+    plots.view_angle2=view2
     
     plots.Plot_Shape_Node_Number()
     plots.Plot_Shape_Cst_Number()
@@ -276,7 +278,8 @@ load = st.selectbox(
      "Applied Loads (N):",
      [100, 200, 300, 400, 500, 600])
 
+view1 = st.slider("View angle 1:", [15,30,45,60,75,90])
+view2 = st.slider("View angle 2:", [75,90,105,120,135,150,165,180])
 
-
-fig=SolveBridgeDeformation(N,load)
+fig=SolveBridgeDeformation(N,load,view1,view2)
 st.pyplot(fig)
