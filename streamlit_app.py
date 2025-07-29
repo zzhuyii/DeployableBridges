@@ -266,35 +266,27 @@ def SolveBridgeDeformation(N,load,view1,view2,barA):
     # plots.fileName = 'OrigamiTruss_deploy.gif'
     # plots.plot_deformed_history(Uhis[::10])
 
+st.subheader("Simulate motion and load-carrying of deployable bridge")
+
+st.text('''Developer: Dr. Yi Zhu''')
+
+st.text('''This is a demo for using the Sim-FAST package to simulate the deployment ...
+        and load carrying capacity of kirigami truss bridges. We assume that connections ...
+        are rigid, all members share the same cross-section, and ignore buckling ...
+        related failure mode when calculating the loading. ''')
 
 st.subheader("Setting up the deployable bridge")
-
 
 N = st.selectbox(
      "Select a number for sections:",
      [2,4,6,8,10,12])
 
-
-
-
-load = st.selectbox(
-     "Applied Loads (N):",
-     [1000.0, 2000.0, 3000.0, 4000.0, 5000.0, 6000.0])
-
 barA = st.selectbox("Bar Area (m2)):",         
      [0.0001, 0.0004, 0.001, 0.004, 0.01, 0.04])
 
-view1 = st.slider("View angle 1:",         
-        min_value=0.0,
-        max_value=90.0,
-        value=15.0,
-        step=5.0)
-
-view2 = st.slider("View angle 2:",         
-        min_value=0.0,
-        max_value=180.0,
-        value=70.0,
-        step=5.0)
+st.text('''Here we quickly set up the deployable kirigami truss bridge by picking ...
+        the number of sections and truss areas. The following GIF will show the ...
+        deployment kinematics. ''')
 
 if N == 2:
     st.image("Kirigami_Truss_2Sec_Deploy.gif")
@@ -309,6 +301,24 @@ elif N == 10:
 elif N == 12:
     st.image("Kirigami_Truss_12Sec_Deploy.gif")
 
+
+st.subheader("Load-carrying simulation of the deployable bridge")
+
+load = st.selectbox(
+     "Applied Loads (N):",
+     [1000.0, 2000.0, 3000.0, 4000.0, 5000.0, 6000.0])
+
+view1 = st.slider("View angle 1:",         
+        min_value=0.0,
+        max_value=90.0,
+        value=15.0,
+        step=5.0)
+
+view2 = st.slider("View angle 2:",         
+        min_value=0.0,
+        max_value=180.0,
+        value=70.0,
+        step=5.0)
 
 fig=SolveBridgeDeformation(N,load,view1,view2,barA)
 st.pyplot(fig)
