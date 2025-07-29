@@ -268,12 +268,12 @@ def SolveBridgeDeformation(N,load,view1,view2,barA):
 
 st.subheader("Simulate motion and load-carrying of deployable bridge")
 
-st.text('''Developer: Dr. Yi Zhu''')
+st.text('Developer: Dr. Yi Zhu')
 
-st.text('''This is a demo for using the Sim-FAST package to simulate the deployment 
-        ... and load carrying capacity of kirigami truss bridges. We assume that connections
-        ... are rigid, all members share the same cross-section, and ignore buckling 
-        related failure mode when calculating the loading. ''')
+st.text('This is a demo for using the Sim-FAST package to simulate the deployment' + 
+        'and load carrying capacity of kirigami truss bridges. We assume that' +
+        'connections are rigid, all members share the same cross-section, and' +
+        'ignore buckling related failure mode when calculating the loading.')
 
 st.subheader("Setting up the deployable bridge")
 
@@ -284,9 +284,9 @@ N = st.selectbox(
 barA = st.selectbox("Bar Area (m2)):",         
      [0.0001, 0.0004, 0.001, 0.004, 0.01, 0.04])
 
-st.text('''Here we quickly set up the deployable kirigami truss bridge by picking ...
-        the number of sections and truss areas. The following GIF will show the ...
-        deployment kinematics. ''')
+st.text('Here we quickly set up the deployable kirigami truss bridge by picking' +
+        'the number of sections and truss areas. The following GIF will show the' +
+        'deployment kinematics.')
 
 if N == 2:
     st.image("Kirigami_Truss_2Sec_Deploy.gif")
