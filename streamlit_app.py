@@ -8,11 +8,10 @@ from Assembly_KirigamiTruss import Assembly_KirigamiTruss
 from Plot_KirigamiTruss import Plot_KirigamiTruss
 from Solver_NR_Loading import Solver_NR_Loading
 
-def SolveBridgeDeformation(N,load,view1,view2,barA):    
+def SolveBridgeDeformation(N,load,view1,view2,barA,L):    
     
     # Define Geometry
-    L = 1
-    w = 0.1
+    w = 0.1*L
     gap = 0
 
     node = Elements_Nodes()
@@ -270,9 +269,9 @@ st.subheader("Simulate motion and load-carrying of deployable bridge")
 
 st.text('Developer: Dr. Yi Zhu')
 
-st.text('This is a demo for using the Sim-FAST package to simulate the deployment' + 
-        'and load carrying capacity of kirigami truss bridges. We assume that' +
-        'connections are rigid, all members share the same cross-section, and' +
+st.text('This is a demo for using the Sim-FAST package to simulate the deployment ' + 
+        'and load carrying capacity of kirigami truss bridges. We assume that ' +
+        'connections are rigid, all members share the same cross-section, and ' +
         'ignore buckling related failure mode when calculating the loading.')
 
 st.subheader("Setting up the deployable bridge")
@@ -284,9 +283,14 @@ N = st.selectbox(
 barA = st.selectbox("Bar Area (m2)):",         
      [0.0001, 0.0004, 0.001, 0.004, 0.01, 0.04])
 
-st.text('Here we quickly set up the deployable kirigami truss bridge by picking' +
-        'the number of sections and truss areas. The following GIF will show the' +
-        'deployment kinematics.')
+L = st.selectbox(
+     "Length of the sections (m):",
+     [1.0,1.5,2.0,2.5,3.0])
+
+st.text('Here we quickly set up the deployable kirigami truss bridge by picking ' +
+        'the number of sections and truss areas. The following pre-simulated ' +
+        'GIF will show the deployment kinematics. This GIF shows a bridge with.' +
+        'a section length to be 1 meter')
 
 if N == 2:
     st.image("Kirigami_Truss_2Sec_Deploy.gif")
@@ -304,6 +308,11 @@ elif N == 12:
 
 st.subheader("Load-carrying simulation of the deployable bridge")
 
+st.text('Here we quickly set up the loading of the bridge. ' + 
+        'We assume that the bridge is simply supported at both ends, ' +
+        'and the bridge is loaded at the mid-span with a concentrated load. ' +
+        'The following figures show the loading results.')
+
 load = st.selectbox(
      "Applied Loads (N):",
      [1000.0, 2000.0, 3000.0, 4000.0, 5000.0, 6000.0])
@@ -320,5 +329,5 @@ view2 = st.slider("View angle 2:",
         value=70.0,
         step=5.0)
 
-fig=SolveBridgeDeformation(N,load,view1,view2,barA)
+fig=SolveBridgeDeformation(N,load,view1,view2,barA,L)
 st.pyplot(fig)
