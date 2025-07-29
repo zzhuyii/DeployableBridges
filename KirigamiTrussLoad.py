@@ -6,7 +6,6 @@ from Vec_Elements_CST import Vec_Elements_CST
 
 from Assembly_KirigamiTruss import Assembly_KirigamiTruss
 from Plot_KirigamiTruss import Plot_KirigamiTruss
-from Solver_NR_Folding_4N import Solver_NR_Folding_4N
 from Solver_NR_Loading import Solver_NR_Loading
 
 # Timing
@@ -256,17 +255,17 @@ Frs,Krs=rotSpr.Solve_FK(node,np.zeros([48,3]))
 # Solver Setup
 nr = Solver_NR_Loading()
 nr.assembly = assembly
-nr.supp = [[0,1,1,1],[1,1,1,1],[2,1,1,1],[3,1,1,1]]
+nr.supp = [[0,1,1,1],[1,1,1,1],[20*N+5,1,1,1],[20*N+6,1,1,1]]
 
 nr.incre_step = 1
 nr.iter_max = 20
 nr.tol = 1e-8
 
 load=1000;
-nr.load=np.array([[20*N+5-1, 0, 0, -load],
-         [20*N+6-1, 0, 0, -load],
-         [20*N+7-1, 0, 0, -load],
-         [20*N+8-1, 0, 0, -load]])
+nr.load=np.array([[20*N/2+5-1, 0, 0, -load],
+         [20*N/2+6-1, 0, 0, -load],
+         [20*N/2+1-1, 0, 0, -load],
+         [20*N/2+2-1, 0, 0, -load]])
 
 
 Uhis = nr.Solve()

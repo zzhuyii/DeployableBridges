@@ -245,17 +245,18 @@ def SolveBridgeDeformation(N,load):
     # Solver Setup
     nr = Solver_NR_Loading()
     nr.assembly = assembly
-    nr.supp = [[0,1,1,1],[1,1,1,1],[2,1,1,1],[3,1,1,1]]
+    nr.supp = [[0,1,1,1],[1,1,1,1],[20*N+5,1,1,1],[20*N+6,1,1,1]]
+
     
     nr.incre_step = 1
     nr.iter_max = 20
     nr.tol = 1e-8
     
-    nr.load=np.array([[20*N+5-1, 0, 0, -load],
-             [20*N+6-1, 0, 0, -load],
-             [20*N+7-1, 0, 0, -load],
-             [20*N+8-1, 0, 0, -load]])
-    
+    nr.load=np.array([[20*N+5-1, 0, 0, -load/4],
+             [20*N+6-1, 0, 0, -load/4],
+             [20*N+1-1, 0, 0, -load/4],
+             [20*N+2-1, 0, 0, -load/4]])
+        
     
     Uhis = nr.Solve()
     fig=plots.Plot_Deformed_Shape(100*Uhis[-1])
@@ -264,15 +265,18 @@ def SolveBridgeDeformation(N,load):
     # plots.plot_deformed_history(Uhis[::10])
 
 
-st.subheader("Number of Sections")
+st.subheader("Setting up the deployable bridge")
+
+
 N = st.selectbox(
      "Select a number for sections:",
-     [1, 2, 3, 4, 5, 6])
+     [2,4,6,8,10,12])
 
-st.subheader("Applied Load")
 load = st.selectbox(
-     "Loads (N):",
+     "Applied Loads (N):",
      [100, 200, 300, 400, 500, 600])
+
+
 
 fig=SolveBridgeDeformation(N,load)
 st.pyplot(fig)
