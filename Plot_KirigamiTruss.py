@@ -382,11 +382,11 @@ class Plot_KirigamiTruss:
         
         # Create legend with 5 stress ranges
         legend_patches = [
-            Patch(color="red", label="{:.1f} to {:.1f} kPa".format((4/5*(maxSx-minSx)+minSx)/1000,(maxSx)/1000)),
-            Patch(color="orange", label="{:.1f} to {:.1f} kPa".format((3/5*(maxSx-minSx)+minSx)/1000,(4/5*(maxSx-minSx)+minSx)/1000)),
-            Patch(color="yellow", label="{:.1f} to {:.1f} kPa".format((2/5*(maxSx-minSx)+minSx)/1000,(3/5*(maxSx-minSx)+minSx)/1000)),
-            Patch(color="green", label="{:.1f} to {:.1f} kPa".format((1/5*(maxSx-minSx)+minSx)/1000,(2/5*(maxSx-minSx)+minSx)/1000)),
-            Patch(color="blue", label="{:.1f} to {:.1f} kPa".format(minSx/1000,(1/5*(maxSx-minSx)+minSx)/1000)),
+            Patch(color="red", label="{:.1f} to {:.1f} MPa".format((4/5*(maxSx-minSx)+minSx)/1000000,(maxSx)/1000000)),
+            Patch(color="orange", label="{:.1f} to {:.1f} MPa".format((3/5*(maxSx-minSx)+minSx)/1000000,(4/5*(maxSx-minSx)+minSx)/1000000)),
+            Patch(color="yellow", label="{:.1f} to {:.1f} MPa".format((2/5*(maxSx-minSx)+minSx)/1000000,(3/5*(maxSx-minSx)+minSx)/1000000)),
+            Patch(color="green", label="{:.1f} to {:.1f} MPa".format((1/5*(maxSx-minSx)+minSx)/1000000,(2/5*(maxSx-minSx)+minSx)/1000000)),
+            Patch(color="blue", label="{:.1f} to {:.1f} MPa".format(minSx/1000000,(1/5*(maxSx-minSx)+minSx)/1000000)),
         ]
         
         ax.legend(handles=legend_patches, loc='upper left', bbox_to_anchor=(0, 1))           
