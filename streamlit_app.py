@@ -240,13 +240,8 @@ def SolveBridgeDeformation(N,load):
     plots.Plot_Shape_Node_Number()
     plots.Plot_Shape_Cst_Number()
     plots.Plot_Shape_Bar_Number()        
-    plots.Plot_Shape_Spr_Number()
-    
-    Fstart,Kstart=assembly.Solve_FK(np.zeros([48,3]))
-    Fb,Kb=bar.Solve_FK(node,np.zeros([48,3]))
-    Fcst,Kcst=cst.Solve_FK(node,np.zeros([48,3]))
-    Frs,Krs=rotSpr.Solve_FK(node,np.zeros([48,3]))
-    
+    plots.Plot_Shape_Spr_Number()    
+   
     # Solver Setup
     nr = Solver_NR_Loading()
     nr.assembly = assembly
