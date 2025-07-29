@@ -258,7 +258,7 @@ class Plot_KirigamiTruss:
         ax = fig.add_subplot(111, projection='3d')
         ax.view_init(view1, view2)
         ax.set_facecolor('white')
-        plt.gca().set_aspect('auto', adjustable='box')
+        plt.gca().set_aspect('equal', adjustable='box')
     
         # Set axis limits
         if isinstance(Vsize,(list, tuple, np.ndarray)):
