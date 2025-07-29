@@ -344,7 +344,7 @@ class Plot_KirigamiTruss:
             nodeNumVec = cstIJK[k]
             v = [undeformedNode[nn-1] for nn in nodeNumVec]  # MATLAB to Python
             verts = [v]
-            patch = Poly3DCollection(verts, facecolors='yellow', linewidths=1, edgecolors='k')
+            patch = Poly3DCollection(verts, facecolors='yellow', alpha=0.2, linewidths=1, edgecolors='k')
             ax.add_collection3d(patch)
     
     

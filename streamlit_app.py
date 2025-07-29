@@ -337,7 +337,6 @@ view2 = st.slider("View angle 2:",
 fig1,fig2=SolveBridgeDeformation(N,load,view1,view2,barA,L)
 
 st.pyplot(fig1)
-
 st.pyplot(fig2)
 
 
