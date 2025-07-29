@@ -3,5 +3,5 @@ matplotlib
 numpy
 pandas
 seaborn
-imageio
+imageio==2.31.1
 mpl_toolkits
