@@ -274,6 +274,9 @@ N = st.selectbox(
      "Select a number for sections:",
      [2,4,6,8,10,12])
 
+
+
+
 load = st.selectbox(
      "Applied Loads (N):",
      [1000.0, 2000.0, 3000.0, 4000.0, 5000.0, 6000.0])
@@ -293,6 +296,18 @@ view2 = st.slider("View angle 2:",
         value=70.0,
         step=5.0)
 
+if N == 2:
+    st.image("Kirigami_Truss_2Sec_Deploy.gif")
+elif N == 4:
+    st.image("Kirigami_Truss_4Sec_Deploy.gif")
+elif N == 6:
+    st.image("Kirigami_Truss_6Sec_Deploy.gif")
+elif N == 8:
+    st.image("Kirigami_Truss_8Sec_Deploy.gif")
+elif N == 10:
+    st.image("Kirigami_Truss_10Sec_Deploy.gif")
+elif N == 12:
+    st.image("Kirigami_Truss_12Sec_Deploy.gif")
 
 
 fig=SolveBridgeDeformation(N,load,view1,view2,barA)
