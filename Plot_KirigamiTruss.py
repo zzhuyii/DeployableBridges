@@ -335,16 +335,27 @@ class Plot_KirigamiTruss:
             ax.set_xlim(-Vsize*Vratio, Vsize)
             ax.set_ylim(-Vsize*Vratio, Vsize)
             ax.set_zlim(-Vsize*Vratio, Vsize)
+            
+            
+        # Plot deformed panels (yellow)
+        cstIJK = assembly.cst.node_ijk_mat
+        panelNum = len(cstIJK) 
+        for k in range(panelNum):
+            nodeNumVec = cstIJK[k]
+            v = [undeformedNode[nn-1] for nn in nodeNumVec]  # MATLAB to Python
+            verts = [v]
+            patch = Poly3DCollection(verts, facecolors='yellow', linewidths=1, edgecolors='k')
+            ax.add_collection3d(patch)
     
+    
+        # Plot deformed bars (black lines)
+        
         Ex=assembly.bar.solve_strain(assembly.node, U)
         Sx, C = assembly.bar.solve_stress(Ex)
         
         minSx = min(Sx)
         maxSx = max(Sx)
         
-        
-    
-        # Plot deformed bars (black lines)
         barConnect = assembly.bar.node_ij_mat
         barNum = len(barConnect)
         for j in range(barNum):
@@ -365,17 +376,9 @@ class Plot_KirigamiTruss:
             
             ax.plot([node1[0], node2[0]],
                     [node1[1], node2[1]],
-                    [node1[2], node2[2]], color=colorTemp)
+                    [node1[2], node2[2]], color=colorTemp, linewidths=2)
     
-        # Plot deformed panels (yellow)
-        cstIJK = assembly.cst.node_ijk_mat
-        panelNum = len(cstIJK) 
-        for k in range(panelNum):
-            nodeNumVec = cstIJK[k]
-            v = [undeformedNode[nn-1] for nn in nodeNumVec]  # MATLAB to Python
-            verts = [v]
-            patch = Poly3DCollection(verts, facecolors='yellow', linewidths=0, edgecolors='k')
-            ax.add_collection3d(patch)
+
             
         plt.gca().set_aspect('equal')   
     
