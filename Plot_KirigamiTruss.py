@@ -303,6 +303,8 @@ class Plot_KirigamiTruss:
             verts = [v]
             patch = Poly3DCollection(verts, facecolors='yellow', alpha=0.2, linewidths=1, edgecolors='k')
             ax.add_collection3d(patch)
+            
+        plt.gca().set_aspect('equal')   
     
         plt.show()
         return fig
