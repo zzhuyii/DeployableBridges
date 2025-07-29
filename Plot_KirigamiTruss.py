@@ -258,7 +258,7 @@ class Plot_KirigamiTruss:
         ax = fig.add_subplot(111, projection='3d')
         ax.view_init(view1, view2)
         ax.set_facecolor('white')
-        plt.gca().set_aspect('equal')
+        #plt.gca().set_aspect('equal')
     
         # Set axis limits
         if isinstance(Vsize,(list, tuple, np.ndarray)):
@@ -304,7 +304,7 @@ class Plot_KirigamiTruss:
             patch = Poly3DCollection(verts, facecolors='yellow', alpha=0.2, linewidths=1, edgecolors='k')
             ax.add_collection3d(patch)
             
-        plt.gca().set_aspect('equal')   
+        #plt.gca().set_aspect('equal')   
     
         plt.show()
         return fig
@@ -323,7 +323,7 @@ class Plot_KirigamiTruss:
         ax = fig.add_subplot(111, projection='3d')
         ax.view_init(view1, view2)
         ax.set_facecolor('white')
-        plt.gca().set_aspect('equal')
+        #plt.gca().set_aspect('equal')
     
         # Set axis limits
         if isinstance(Vsize,(list, tuple, np.ndarray)):
@@ -376,11 +376,10 @@ class Plot_KirigamiTruss:
             
             ax.plot([node1[0], node2[0]],
                     [node1[1], node2[1]],
-                    [node1[2], node2[2]], color=colorTemp, linewidth=2)
-    
-
+                    [node1[2], node2[2]], color=colorTemp, linewidth=2)    
             
-        plt.gca().set_aspect('equal')   
+           
+        #plt.gca().set_aspect('equal')   
     
         plt.show()
         return fig

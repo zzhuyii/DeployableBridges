@@ -86,7 +86,7 @@ for i in range(N):
     
 cstNum = len(cst.node_ijk_mat)
 cst.t_vec = 0.1 * np.ones(cstNum)
-cst.E_vec = 2.0e9 * np.ones(cstNum)
+cst.E_vec = 200.0e9 * np.ones(cstNum)
 cst.v_vec = 0.2 * np.ones(cstNum)
 
 
@@ -120,8 +120,8 @@ for i in range(N):
         
         
 barNum = len(bar.node_ij_mat)
-bar.A_vec = 0.01 * np.ones(barNum)
-bar.E_vec = 2e9 * np.ones(barNum)
+bar.A_vec = 0.00005 * np.ones(barNum)
+bar.E_vec = 200e9 * np.ones(barNum)
 
 
 # Define Rotational Springs
@@ -240,28 +240,23 @@ assembly.Initialize_Assembly()
 plots = Plot_KirigamiTruss()
 plots.assembly = assembly
 
-plots.display_range = np.array([-1, L*(N+1), -1, 2, -1, 2])
+plots.display_range = np.array([-0.2*L, L*(N+1), -0.2*L, 1.2*L, -0.2*L, 1.2*L])
 
 plots.Plot_Shape_Node_Number()
 plots.Plot_Shape_Cst_Number()
 plots.Plot_Shape_Bar_Number()        
 plots.Plot_Shape_Spr_Number()
 
-Fstart,Kstart=assembly.Solve_FK(np.zeros([48,3]))
-Fb,Kb=bar.Solve_FK(node,np.zeros([48,3]))
-Fcst,Kcst=cst.Solve_FK(node,np.zeros([48,3]))
-Frs,Krs=rotSpr.Solve_FK(node,np.zeros([48,3]))
-
 # Solver Setup
 nr = Solver_NR_Loading()
 nr.assembly = assembly
-nr.supp = [[0,1,1,1],[1,1,1,1],[20*N+5,1,1,1],[20*N+6,1,1,1]]
+nr.supp = [[0,1,1,1],[1,1,1,1],[20*N+5-1,1,1,1],[20*N+6-1,1,1,1]]
 
 nr.incre_step = 1
 nr.iter_max = 20
 nr.tol = 1e-8
 
-load=1000;
+load=10000;
 nr.load=np.array([[20*N/2+5-1, 0, 0, -load],
          [20*N/2+6-1, 0, 0, -load],
          [20*N/2+1-1, 0, 0, -load],
@@ -272,5 +267,6 @@ Uhis = nr.Solve()
 end = time.time()
 print("Execution Time:", end - start)
 plots.Plot_Deformed_Shape(100*Uhis[-1])
+plots.Plot_Bar_Stress(Uhis[-1])
 # plots.fileName = 'OrigamiTruss_deploy.gif'
 # plots.plot_deformed_history(Uhis[::10])
