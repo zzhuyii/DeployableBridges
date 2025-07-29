@@ -80,7 +80,7 @@ def SolveBridgeDeformation(N,load,view1,view2,barA,L):
         
     cstNum = len(cst.node_ijk_mat)
     cst.t_vec = 0.1 * np.ones(cstNum)
-    cst.E_vec = 2.0e9 * np.ones(cstNum)
+    cst.E_vec = 200.0e9 * np.ones(cstNum)
     cst.v_vec = 0.2 * np.ones(cstNum)
 
 
@@ -115,7 +115,7 @@ def SolveBridgeDeformation(N,load,view1,view2,barA,L):
         
     barNum = len(bar.node_ij_mat)
     bar.A_vec = barA * np.ones(barNum)
-    bar.E_vec = 2e9 * np.ones(barNum)
+    bar.E_vec = 200e9 * np.ones(barNum)
 
 
     # Define Rotational Springs
@@ -219,7 +219,7 @@ def SolveBridgeDeformation(N,load,view1,view2,barA,L):
                     [20*N+6,  20*N+1,  20*N+5,  20*N+7]])
         
     rotNum = len(rotSpr.node_ijkl_mat)
-    rotSpr.rot_spr_K_vec = 1000.0 * np.ones(rotNum)
+    rotSpr.rot_spr_K_vec = 10000.0 * np.ones(rotNum)
     
     
     factor = 1000
@@ -253,10 +253,10 @@ def SolveBridgeDeformation(N,load,view1,view2,barA,L):
     nr.iter_max = 20
     nr.tol = 1e-8
     
-    nr.load=np.array([[20*N+5-1, 0, 0, -load/4],
-             [20*N+6-1, 0, 0, -load/4],
-             [20*N+1-1, 0, 0, -load/4],
-             [20*N+2-1, 0, 0, -load/4]])
+    nr.load=np.array([[20*N/2+5-1, 0, 0, -load/4],
+             [20*N/2+6-1, 0, 0, -load/4],
+             [20*N/2+1-1, 0, 0, -load/4],
+             [20*N/2+2-1, 0, 0, -load/4]])
         
     
     Uhis = nr.Solve()
@@ -314,8 +314,9 @@ st.text('Here we quickly set up the loading of the bridge. ' +
         'The following figures show the loading results.')
 
 load = st.selectbox(
-     "Applied Loads (N):",
-     [1000.0, 2000.0, 3000.0, 4000.0, 5000.0, 6000.0])
+     "Applied Loads (kN):",
+     [100.0, 200.0, 300.0, 400.0, 500.0, 600.0])
+load=load*1000;
 
 view1 = st.slider("View angle 1:",         
         min_value=0.0,
