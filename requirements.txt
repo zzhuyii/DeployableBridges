@@ -3,3 +3,5 @@ matplotlib
 numpy
 pandas
 seaborn
+imageio
+mpl_toolkits
