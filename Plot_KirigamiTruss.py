@@ -4,7 +4,7 @@ import imageio
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
 class Plot_KirigamiTruss:
-    def __init__(self, view_angle1=80, view_angle2=70, display_range=10, display_range_ratio=1,
+    def __init__(self, view_angle1=15, view_angle2=70, display_range=10, display_range_ratio=1,
                  x0=100, y0=100, width=800, height=600, hold_time=0.5, filename="deformed.gif"):
         self.assembly = None
         self.view_angle1 = view_angle1
