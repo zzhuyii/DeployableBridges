@@ -3,4 +3,3 @@ imageio
 imageio-ffmpeg
 matplotlib
 numpy
-mpl_toolkits
