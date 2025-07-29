@@ -283,11 +283,12 @@ view1 = st.slider("View angle 1:",
         max_value=90.0,
         value=15.0,
         step=5.0)
+
 view2 = st.slider("View angle 2:",         
         min_value=0.0,
         max_value=180.0,
         value=70.0,
-        step=5)
+        step=5.0)
 
 fig=SolveBridgeDeformation(N,load,view1,view2)
 st.pyplot(fig)
