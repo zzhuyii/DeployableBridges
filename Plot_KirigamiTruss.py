@@ -376,7 +376,7 @@ class Plot_KirigamiTruss:
             
             ax.plot([node1[0], node2[0]],
                     [node1[1], node2[1]],
-                    [node1[2], node2[2]], color=colorTemp, linewidths=2)
+                    [node1[2], node2[2]], color=colorTemp, linewidth=2)
     
 
             
