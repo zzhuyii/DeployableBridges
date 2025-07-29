@@ -315,7 +315,7 @@ st.text('Here we quickly set up the loading of the bridge. ' +
         'We assume that the bridge is simply supported at both ends, ' +
         'and the bridge is loaded at the mid-span with a concentrated load. ' +
         'The following figures show the loading results. Deformation is ' +
-        'Scaled up by 10 time when plotting')
+        'Scaled up by 10 time when plotting. Self weight is neglected.')
 
 load = st.selectbox(
      "Applied Loads (kN):",
