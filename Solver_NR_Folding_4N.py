@@ -1,5 +1,4 @@
 import numpy as np
-from scipy import linalg
 
 class Solver_NR_Folding_4N:
     def __init__(self):
