@@ -276,7 +276,7 @@ N = st.selectbox(
 
 load = st.selectbox(
      "Applied Loads (N):",
-     [100, 200, 300, 400, 500, 600])
+     [1000, 2000, 3000, 4000, 5000, 6000])
 
 view1 = st.slider("View angle 1:",         
         min_value=0.0,
