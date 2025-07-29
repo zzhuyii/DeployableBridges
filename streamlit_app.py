@@ -251,7 +251,6 @@ def SolveBridgeDeformation(N,load):
     nr.iter_max = 20
     nr.tol = 1e-8
     
-    load=1000;
     nr.load=np.array([[20*N+5-1, 0, 0, -load],
              [20*N+6-1, 0, 0, -load],
              [20*N+7-1, 0, 0, -load],
