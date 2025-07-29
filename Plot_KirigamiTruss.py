@@ -308,6 +308,79 @@ class Plot_KirigamiTruss:
     
         plt.show()
         return fig
+    
+    def Plot_Bar_Stress(self, U):
+        # Unpack display settings
+        view1 = self.view_angle1
+        view2 = self.view_angle2
+        Vsize = self.display_range
+        Vratio = self.display_range_ratio
+    
+        assembly = self.assembly
+        undeformedNode = assembly.node.coordinates_mat
+    
+        fig = plt.figure(figsize=(self.width / self.sizeFactor, self.height / self.sizeFactor))
+        ax = fig.add_subplot(111, projection='3d')
+        ax.view_init(view1, view2)
+        ax.set_facecolor('white')
+        plt.gca().set_aspect('equal')
+    
+        # Set axis limits
+        if isinstance(Vsize,(list, tuple, np.ndarray)):
+            # single row, like [-1, L*(N+1), -1, 2, -1, 2]
+            ax.set_xlim(Vsize[0], Vsize[1])
+            ax.set_ylim(Vsize[2], Vsize[3])
+            ax.set_zlim(Vsize[4], Vsize[5])
+        else:
+            ax.set_xlim(-Vsize*Vratio, Vsize)
+            ax.set_ylim(-Vsize*Vratio, Vsize)
+            ax.set_zlim(-Vsize*Vratio, Vsize)
+    
+        Ex=assembly.bar.solve_strain(assembly.node, U)
+        Sx, C = assembly.bar.solve_stress(Ex)
+        
+        minSx = min(Sx)
+        maxSx = max(Sx)
+        
+        
+    
+        # Plot deformed bars (black lines)
+        barConnect = assembly.bar.node_ij_mat
+        barNum = len(barConnect)
+        for j in range(barNum):
+            n1, n2 = barConnect[j]
+            node1 = undeformedNode[n1-1]
+            node2 = undeformedNode[n2-1]
+            
+            if Sx[j] > 4/5*(maxSx-minSx)+minSx:
+                colorTemp='red'
+            elif Sx[j] > 3/5*(maxSx-minSx)+minSx:
+                colorTemp='orange'
+            elif Sx[j] > 2/5*(maxSx-minSx)+minSx:
+                colorTemp='yellow'
+            elif Sx[j] > 1/5*(maxSx-minSx)+minSx:
+                colorTemp='green'
+            else:
+                colorTemp='blue'    
+            
+            ax.plot([node1[0], node2[0]],
+                    [node1[1], node2[1]],
+                    [node1[2], node2[2]], color=colorTemp)
+    
+        # Plot deformed panels (yellow)
+        cstIJK = assembly.cst.node_ijk_mat
+        panelNum = len(cstIJK) 
+        for k in range(panelNum):
+            nodeNumVec = cstIJK[k]
+            v = [undeformedNode[nn-1] for nn in nodeNumVec]  # MATLAB to Python
+            verts = [v]
+            patch = Poly3DCollection(verts, facecolors='yellow', linewidths=0, edgecolors='k')
+            ax.add_collection3d(patch)
+            
+        plt.gca().set_aspect('equal')   
+    
+        plt.show()
+        return fig
 
     def Plot_Deformed_History(self, Uhis):
         view1 = self.view_angle1

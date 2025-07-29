@@ -261,7 +261,8 @@ def SolveBridgeDeformation(N,load,view1,view2,barA,L):
     
     Uhis = nr.Solve()
     fig=plots.Plot_Deformed_Shape(10*Uhis[-1])
-    return fig
+    return fig,Uhis,assembly,plots
+
     # plots.fileName = 'OrigamiTruss_deploy.gif'
     # plots.plot_deformed_history(Uhis[::10])
 
@@ -331,5 +332,12 @@ view2 = st.slider("View angle 2:",
         value=70.0,
         step=5.0)
 
-fig=SolveBridgeDeformation(N,load,view1,view2,barA,L)
+fig,Uhis,assembly,plots=SolveBridgeDeformation(N,load,view1,view2,barA,L)
+
 st.pyplot(fig)
+
+plots.Plot_Bar_Stress(Uhis[-1])
+
+
+
+
