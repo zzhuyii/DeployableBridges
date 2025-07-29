@@ -66,6 +66,7 @@ class Plot_KirigamiTruss:
             ax.text(x, y, z, str(i+1), color='blue')
     
         plt.show()
+        
 
     def Plot_Shape_Bar_Number(self):
         # Unpack display settings
@@ -304,7 +305,7 @@ class Plot_KirigamiTruss:
             ax.add_collection3d(patch)
     
         plt.show()
-
+        return fig
 
     def Plot_Deformed_History(self, Uhis):
         view1 = self.view_angle1
