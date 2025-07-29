@@ -234,7 +234,7 @@ def SolveBridgeDeformation(N,load,view1,view2,barA,L):
     plots = Plot_KirigamiTruss()
     plots.assembly = assembly
     
-    plots.display_range = np.array([-0.2*L, L*(N+1)*1.1, -0.2*L, 1.2*L, -0.2*L, 1.2*L])
+    plots.display_range = np.array([-0.2*L, L*(N)*1.2, -0.2*L, 1.2*L, -0.2*L, 1.2*L])
     plots.view_angle1=view1
     plots.view_angle2=view2
     

@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
 import imageio
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
@@ -304,7 +305,7 @@ class Plot_KirigamiTruss:
             patch = Poly3DCollection(verts, facecolors='yellow', alpha=0.2, linewidths=1, edgecolors='k')
             ax.add_collection3d(patch)
             
-        #plt.gca().set_aspect('equal')   
+        plt.gca().set_aspect('equal')   
     
         plt.show()
         return fig
@@ -376,10 +377,21 @@ class Plot_KirigamiTruss:
             
             ax.plot([node1[0], node2[0]],
                     [node1[1], node2[1]],
-                    [node1[2], node2[2]], color=colorTemp, linewidth=2)    
-            
+                    [node1[2], node2[2]], color=colorTemp, linewidth=2) 
+
+        
+        # Create legend with 5 stress ranges
+        legend_patches = [
+            Patch(color="red", label="{:.1f} to {:.1f} kPa".format((4/5*(maxSx-minSx)+minSx)/1000,(maxSx)/1000)),
+            Patch(color="orange", label="{:.1f} to {:.1f} kPa".format((3/5*(maxSx-minSx)+minSx)/1000,(4/5*(maxSx-minSx)+minSx)/1000)),
+            Patch(color="yellow", label="{:.1f} to {:.1f} kPa".format((2/5*(maxSx-minSx)+minSx)/1000,(3/5*(maxSx-minSx)+minSx)/1000)),
+            Patch(color="green", label="{:.1f} to {:.1f} kPa".format((1/5*(maxSx-minSx)+minSx)/1000,(2/5*(maxSx-minSx)+minSx)/1000)),
+            Patch(color="blue", label="{:.1f} to {:.1f} kPa".format(minSx/1000,(1/5*(maxSx-minSx)+minSx)/1000)),
+        ]
+        
+        ax.legend(handles=legend_patches, loc='left')
            
-        #plt.gca().set_aspect('equal')   
+        plt.gca().set_aspect('equal')   
     
         plt.show()
         return fig
