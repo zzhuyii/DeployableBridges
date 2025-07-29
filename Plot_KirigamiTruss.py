@@ -389,10 +389,8 @@ class Plot_KirigamiTruss:
             Patch(color="blue", label="{:.1f} to {:.1f} kPa".format(minSx/1000,(1/5*(maxSx-minSx)+minSx)/1000)),
         ]
         
-        ax.legend(handles=legend_patches, loc='left')
-           
-        plt.gca().set_aspect('equal')   
-    
+        ax.legend(handles=legend_patches, loc='upper left', bbox_to_anchor=(0, 1))           
+        plt.gca().set_aspect('equal')       
         plt.show()
         return fig
 
