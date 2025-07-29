@@ -260,7 +260,7 @@ def SolveBridgeDeformation(N,load,view1,view2,barA,L):
         
     
     Uhis = nr.Solve()
-    fig=plots.Plot_Deformed_Shape(100*Uhis[-1])
+    fig=plots.Plot_Deformed_Shape(10*Uhis[-1])
     return fig
     # plots.fileName = 'OrigamiTruss_deploy.gif'
     # plots.plot_deformed_history(Uhis[::10])
@@ -311,12 +311,13 @@ st.subheader("Load-carrying simulation of the deployable bridge")
 st.text('Here we quickly set up the loading of the bridge. ' + 
         'We assume that the bridge is simply supported at both ends, ' +
         'and the bridge is loaded at the mid-span with a concentrated load. ' +
-        'The following figures show the loading results.')
+        'The following figures show the loading results. Deformation is ' +
+        'Scaled up by 10 time when plotting')
 
 load = st.selectbox(
      "Applied Loads (kN):",
      [100.0, 200.0, 300.0, 400.0, 500.0, 600.0])
-load=load*1000;
+load=load*1000
 
 view1 = st.slider("View angle 1:",         
         min_value=0.0,
