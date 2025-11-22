@@ -270,8 +270,6 @@ def SolveBridgeDeformation(N,load,view1,view2,barA,L):
 
 st.subheader("Simulate motion and load-carrying of deployable bridge")
 
-st.text('Developer: Dr. Yi Zhu')
-
 st.text('This is a demo for using the Sim-FAST package to simulate the deployment ' + 
         'and load carrying capacity of kirigami truss bridges. We assume that ' +
         'connections are rigid, all members share the same cross-section, and ' +
