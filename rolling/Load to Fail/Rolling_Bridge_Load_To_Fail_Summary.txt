@@ -1,0 +1,11 @@
+Rolling_Bridge_Load_To_Fail
+Failed or final step: 54
+Total length of all bars: 218.42 m
+Total bar weight: 61791.78 N
+Failure load: 1512000.00 N
+Mid-span deflection at failure: 0.022621 m
+Stiffness: 66841242.83 N/m
+span/disp at failure: 707.31
+capacity/weight: 24.47
+Maximum DCR: 1.003
+Execution time: 1.70 s

@@ -1,0 +1,12 @@
+Scissor_Bridge_2_Load_To_Fail
+Failed or final step: 46
+Failure reason: Axial member LRFD failure
+Total length of all bars: 365.62 m
+Total bar weight: 80267.58 N
+Failure load: 1610000.00 N
+Mid-span deflection at failure: 0.031608 m
+Stiffness: 50937185.07 N/m
+span/disp at failure: 506.21
+capacity/weight: 20.06
+Maximum DCR: 1.017
+Execution time: 25.26 s
