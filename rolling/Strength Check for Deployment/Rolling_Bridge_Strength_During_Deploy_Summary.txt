@@ -1,0 +1,9 @@
+Rolling_Bridge_Strength_During_Deploy
+Deployment rate: 1.000
+Final checked step: 5
+Total length of all bars: 218.42 m
+Total bar weight: 61791.79 N
+Deck weight: 21952.00 N
+Maximum stress ratio: 0.199
+Tip deflection: 0.015106 m
+Execution time: 27.82 s

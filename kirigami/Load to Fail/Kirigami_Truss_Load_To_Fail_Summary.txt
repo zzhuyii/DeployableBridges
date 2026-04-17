@@ -1,0 +1,11 @@
+Kirigami_Truss_Load_To_Fail
+Failed or final step: 63
+Total length of all bars: 445.02 m
+Total bar weight: 142221.63 N
+Failure load: 3528000.00 N
+Mid-span deflection at failure: 0.024283 m
+Stiffness: 145286774.30 N/m
+span/disp at failure: 658.90
+capacity/weight: 24.81
+Maximum DCR: 1.004
+Execution time: 13.03 s

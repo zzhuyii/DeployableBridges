@@ -1,0 +1,10 @@
+Origami_Bridge_Strength_During_Deploy
+Deployment rate: 0.300
+Deployment step: 210/300
+Final checked step: 5
+Total length of all bars: 238.51 m
+Total bar weight: 76224.18 N
+Deck weight: 21952.00 N
+Maximum stress ratio: 0.201
+Tip deflection: 0.022204 m
+Execution time: 0.13 s

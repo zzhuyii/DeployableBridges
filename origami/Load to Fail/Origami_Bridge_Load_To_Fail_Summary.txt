@@ -1,0 +1,11 @@
+Origami_Bridge_Load_To_Fail
+Failed or final step: 100
+Total length of all bars: 238.51 m
+Total bar weight: 76224.18 N
+Failure load: 1400000.00 N
+Mid-span deflection at failure: 0.019653 m
+Stiffness: 71234951.47 N/m
+span/disp at failure: 814.11
+capacity/weight: 18.37
+Maximum DCR: 1.006
+Execution time: 2.45 s

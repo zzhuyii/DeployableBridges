@@ -1,0 +1,10 @@
+Scissor_Bridge_2_Strength_During_Deploy
+Deployment rate: 0.500
+dL: 0.613126 m
+Final checked step: 5
+Total length of all bars: 365.62 m
+Total bar weight: 80267.58 N
+Deck weight: 21952.00 N
+Maximum stress ratio: 0.390
+Tip deflection: 0.175004 m
+Execution time: 3.97 s
