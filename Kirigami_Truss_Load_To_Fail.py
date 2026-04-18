@@ -47,10 +47,8 @@ def check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp, K_eff=1.0):
 
 
 def kirigami_fail(L, N, barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6, Fy = 345e6, Fu = 427e6, Rp = 1.0):
-    
-    start = time.time()
-    An = barA * 0.9
-  
+
+    An = barA * 0.9  
     r_val = np.sqrt(Ix / barA)
 
     local_ok, lambda_r = local_buckling_pass(barE, Fy)
@@ -78,7 +76,6 @@ def kirigami_fail(L, N, barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6, Fy = 345e6,
     history = []
     Uhis = U_end = truss_strain = pass_yn = dcr = None
     total_F = 0.0
-    failed_step = 100
 
     for step in range(1, 101):
         loads = []
@@ -102,12 +99,7 @@ def kirigami_fail(L, N, barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6, Fy = 345e6,
         history.append([step, total_F, max_dcr, 1.0 if safe else 0.0])
         print(f"Step {step:2d} : {'All Truss Members Safe' if safe else 'Member Failure Detected'} (AASHTO LRFD)")
         if not safe:
-            failed_step = step
             break
-
-    mid_nodes = [16 * (N // 2 - 1) + 17 - 1, 16 * (N // 2 - 1) + 18 - 1]
-    Uaverage = -float(np.mean(U_end[mid_nodes, 2]))
-    Kstiff = total_F / Uaverage if abs(Uaverage) > 1.0e-12 else np.inf
 
     plots.view_angle1=10
     plots.view_angle2=-75 

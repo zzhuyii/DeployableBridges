@@ -1,12 +1,4 @@
-import numpy as np
-from Elements_Nodes import Elements_Nodes
-from Vec_Elements_Bars import Vec_Elements_Bars
-from Vec_Elements_RotSprings_4N import Vec_Elements_RotSprings_4N
-from Vec_Elements_CST import Vec_Elements_CST
 import streamlit as st
-from Assembly_KirigamiTruss import Assembly_KirigamiTruss
-from Plot_KirigamiTruss import Plot_KirigamiTruss
-from Solver_NR_Loading import Solver_NR_Loading
 
 from Kirigami_Truss_Strength_During_Deploy import kirigami_deploy
 from Kirigami_Truss_Load_To_Fail import kirigami_fail
@@ -16,6 +8,8 @@ from Origami_Bridge_Load_To_Fail import origami_fail
 
 
 st.subheader("Simulation of of deployable bridge")
+
+st.text('Developer: Zhongqi Fan & Yi Zhu')
 
 st.text('This is a demo for using the Sim-FAST package to simulate the deployment ' + 
         'and load carrying capacity of different deployable bridges. We assume that ' +

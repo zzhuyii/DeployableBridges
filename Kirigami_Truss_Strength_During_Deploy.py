@@ -66,8 +66,9 @@ def write_summary(name, lines):
     print(f"Saved: {path}")
 
 
-def kirigami_deploy(L, N, dep_rate, barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6, Fy = 345e6, Fu = 427e6,  Rp = 1.0):
-    start = time.time()
+def kirigami_deploy(L, N, dep_rate, barA = 0.00415, barE = 2.0e11, 
+                    Ix = 7.16e-6, Fy = 345e6, Fu = 427e6,  Rp = 1.0):
+
     An = barA * 0.9   
     r_val = np.sqrt(Ix / barA)
 
@@ -99,7 +100,6 @@ def kirigami_deploy(L, N, dep_rate, barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6,
     history = []
     Uhis = U_end = truss_strain = pass_yn = dcr = None
     total_F = 0.0
-    final_step = 5
 
     for step in range(1, 6):
         force = (W_bar + W_deck) / node_num / 5.0 * step
@@ -117,11 +117,12 @@ def kirigami_deploy(L, N, dep_rate, barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6,
         history.append([step, total_F, float(np.nanmax(dcr)), 1.0 if safe else 0.0])
         print(f"Step {step:2d} : {'All Truss Members Safe' if safe else 'Member Failure Detected'} (AASHTO LRFD)")
         if not safe:
-            final_step = step
             break
         
     plots.view_angle1=10
     plots.view_angle2=-75
+    
+    plots.height=300
 
     truss_stress = truss_strain * bar.E_vec
     # save_figure(plots.Plot_Shape_Bar_Stress(truss_stress, U_end), "Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")
