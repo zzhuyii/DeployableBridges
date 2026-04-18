@@ -33,8 +33,6 @@ def bar_length_and_weight(node, bar, rho_steel=7850.0, g=9.81):
 
 def deployment_offset(node_count, dep_rate, N):
     deploy_path = os.path.abspath("KirigamiUhis.npy")
-    if not os.path.exists(deploy_path):
-        return np.zeros((node_count, 3), dtype=float)
 
     Uhis = np.load(deploy_path)
     print(Uhis.shape)

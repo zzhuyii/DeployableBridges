@@ -74,7 +74,7 @@ def kirigami_fail(L, N, barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6, Fy = 345e6,
         [16 * N + 2 - 1, 1, 1, 1],
     ], dtype=float)
 
-    force = 10000.0
+    force = 40000.0
     history = []
     Uhis = U_end = truss_strain = pass_yn = dcr = None
     total_F = 0.0
