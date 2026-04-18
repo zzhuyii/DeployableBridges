@@ -17,9 +17,7 @@ from Assembly_KirigamiTruss import Assembly_KirigamiTruss
 from Plot_KirigamiTruss import Plot_KirigamiTruss
 
 
-def build_kirigami_truss(
-    L,    
-    N,
+def build_kirigami_truss(L, N,
     barA=0.0023,
     barE=2.0e11,
     panel_E=2.0e8,
