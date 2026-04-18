@@ -43,10 +43,9 @@ DepRate = st.selectbox(
      [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0])
 
 
-st.text('Here we quickly set up the deployable kirigami truss bridge by picking ' +
-        'the number of sections and truss areas. The following pre-simulated ' +
-        'GIF will show the deployment kinematics. This GIF shows a bridge with.' +
-        'a section length to be 1 meter')
+st.text('Here, we check the truss strength during the deployment process.' + 
+        'You can change deployment ratio for different stage of deployment' +
+        'The load applied is the bridge self-weight with AASHTO factors.')
 
 if BridgeType=='kirigami':        
     fig1,fig2=kirigami_deploy(L, N, DepRate)    
@@ -58,29 +57,15 @@ if BridgeType=='kirigami':
 
 st.subheader("Load to failure after deployment")
 
-st.text('Here we quickly set up the loading of the bridge. ' + 
-        'We assume that the bridge is simply supported at both ends, ' +
-        'and the bridge is loaded at the mid-span with a concentrated load. ' +
-        'The following figures show the loading results. Deformation is ' +
-        'Scaled up by 10 time when plotting. Self weight is neglected.')
+st.text('Here we load the bridge all the way to failure. We will study' + 
+        ' the capacity of the bridge and the efficiency of the bridge.' )
 
-load = st.selectbox(
-     "Applied Loads (kN):",
-     [100.0, 200.0, 300.0, 400.0, 500.0, 600.0])
-load=load*1000
-
-view1 = st.slider("View angle 1:",         
-        min_value=0.0,
-        max_value=90.0,
-        value=15.0,
-        step=5.0)
-
-view2 = st.slider("View angle 2:",         
-        min_value=0.0,
-        max_value=180.0,
-        value=70.0,
-        step=5.0)
-
+if BridgeType=='kirigami':        
+    fig1,fig2=kirigami_fail(L, N)    
+    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
+    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
+    st.pyplot(fig1)
+    st.pyplot(fig2)
 
 
 

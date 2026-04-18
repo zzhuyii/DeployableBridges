@@ -53,7 +53,7 @@ def write_summary(name, lines):
     print(f"Saved: {path}")
 
 
-def kirigami_fail(L = 2.0,N = 8, barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6, Fy = 345e6, Fu = 427e6, Rp = 1.0):
+def kirigami_fail(L, N, barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6, Fy = 345e6, Fu = 427e6, Rp = 1.0):
     
     start = time.time()
     An = barA * 0.9
@@ -66,7 +66,7 @@ def kirigami_fail(L = 2.0,N = 8, barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6, Fy
     print(f"  lambda_r = {lambda_r:.2f}")
 
     assembly, node, bar, cst, rot_spr_4N, rot_spr_3N, plots = build_kirigami_truss(
-        L=L, gap=0.0, N=N, barA=barA, barE=barE,
+        L=L, N=N, barA=barA, barE=barE,
         panel_E=2.0e8, panel_t=0.01, panel_v=0.3,
         rot4K=1.0e8, rot3K=1.0e8,
     )
@@ -123,7 +123,9 @@ def kirigami_fail(L = 2.0,N = 8, barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6, Fy
     truss_stress = truss_strain * bar.E_vec
     save_figure(plots.Plot_Shape_Bar_Stress(truss_stress, U_end), "Kirigami_Truss_Load_To_Fail_Bar_Stress.png")
     save_figure(plots.Plot_Shape_Bar_Failure(pass_yn, U_end), "Kirigami_Truss_Load_To_Fail_Bar_Failure.png")
+    
+    fig1=plots.Plot_Shape_Bar_Stress(truss_stress, U_end)
+    fig2=plots.Plot_Shape_Bar_Failure(pass_yn,U_end)
 
+    return fig1, fig2
 
-if __name__ == "__main__":
-    main()
