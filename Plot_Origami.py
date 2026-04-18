@@ -263,17 +263,11 @@ class Plot_Origami:
         plt.close(fig)
         imageio.mimsave(self.fileName, images, duration=self.holdTime)
 
-    def Plot_Bar_Stress(self, U_or_stress):
+    def Plot_Bar_Stress(self, bar_stress, U_end):
         assembly = self.assembly
         node0 = assembly.node.coordinates_mat
+        deformedNode = node0 + U_end
 
-        # Accept either displacement U (NodeNum x 3) or direct bar stress (Nb,)
-        if isinstance(U_or_stress, np.ndarray) and U_or_stress.ndim == 2:
-            ex = assembly.bar.solve_strain(assembly.node, U_or_stress)
-            sx, _ = assembly.bar.solve_stress(ex)
-            bar_stress = sx
-        else:
-            bar_stress = np.asarray(U_or_stress, dtype=float).reshape(-1)
 
         fig = plt.figure(figsize=(self.width / self.sizeFactor, self.height / self.sizeFactor))
         ax = fig.add_subplot(111, projection='3d')
@@ -307,8 +301,8 @@ class Plot_Origami:
                 color = (0, 0, 1)          # blue
 
             n1, n2 = barConnect[j]
-            node1 = node0[n1 - 1]
-            node2 = node0[n2 - 1]
+            node1 = deformedNode[n1 - 1]
+            node2 = deformedNode[n2 - 1]
             ax.plot([node1[0], node2[0]], [node1[1], node2[1]], [node1[2], node2[2]],
                     color=color, linewidth=2)
 
@@ -338,9 +332,11 @@ class Plot_Origami:
         return fig
 
 
-    def Plot_Shape_Bar_Failure(self, pass_yn):
+    def Plot_Shape_Bar_Failure(self, pass_yn, U_end):
         assembly = self.assembly
         node0 = assembly.node.coordinates_mat
+        deformedNode = node0 + U_end
+        
         bar_connect = assembly.bar.node_ij_mat
         pass_yn = np.asarray(pass_yn, dtype=bool).reshape(-1)
 
@@ -349,8 +345,8 @@ class Plot_Origami:
         self._set_axes(ax)
 
         for ok, (n1, n2) in zip(pass_yn, bar_connect):
-            node1 = node0[n1 - 1]
-            node2 = node0[n2 - 1]
+            node1 = deformedNode[n1 - 1]
+            node2 = deformedNode[n2 - 1]
             color = 'green' if ok else 'red'
             ax.plot([node1[0], node2[0]], [node1[1], node2[1]], [node1[2], node2[2]],
                     color=color, linewidth=2)
