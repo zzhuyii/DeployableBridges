@@ -53,18 +53,11 @@ def write_summary(name, lines):
     print(f"Saved: {path}")
 
 
-def main():
+def kirigami_fail(L = 2.0,N = 8, barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6, Fy = 345e6, Fu = 427e6, Rp = 1.0):
+    
     start = time.time()
-
-    L = 2.0
-    N = 8
-    barA = 0.00415
-    barE = 2.0e11
-    Ix = 7.16e-6
-    Fy = 345e6
-    Fu = 427e6
     An = barA * 0.9
-    Rp = 1.0
+  
     r_val = np.sqrt(Ix / barA)
 
     local_ok, lambda_r = local_buckling_pass(barE, Fy)
