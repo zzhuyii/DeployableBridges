@@ -193,8 +193,6 @@ def origami_deploy(   L,
             final_step = step
             break
 
-    Uaverage = -float(np.mean(U_end[[38 - 1, 39 - 1], 2]))
-    
     plots.viewAngle1=10
     plots.viewAngle2=-75 
 
