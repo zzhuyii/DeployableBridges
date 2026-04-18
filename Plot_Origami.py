@@ -284,7 +284,7 @@ class Plot_Origami:
         for k in range(cstIJK.shape[0]):
             nodeNumVec = cstIJK[k]
             v = [node0[nn - 1] for nn in nodeNumVec]
-            patch = Poly3DCollection([v], facecolors='yellow', linewidths=1, edgecolors='k')
+            patch = Poly3DCollection([v], facecolors='yellow', linewidths=0, edgecolors='k', alpha=0.5)
             ax.add_collection3d(patch)
 
         # Color-code bar stress
@@ -333,11 +333,10 @@ class Plot_Origami:
             labels.append(f"{edges[lo_idx[k]]/1e6:.1f} to {edges[hi_idx[k]]/1e6:.1f} MPa")
 
         ax.legend(handles, labels, loc='upper left')
+        plt.gca().set_aspect('equal')
         plt.show()
         return fig
 
-    def Plot_Shape_Bar_Stress(self, bar_stress):
-        return self.Plot_Bar_Stress(bar_stress)
 
     def Plot_Shape_Bar_Failure(self, pass_yn):
         assembly = self.assembly

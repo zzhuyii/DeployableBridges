@@ -126,8 +126,8 @@ def kirigami_deploy(L, N, dep_rate, barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6,
     plots.view_angle2=-75
 
     truss_stress = truss_strain * bar.E_vec
-    save_figure(plots.Plot_Shape_Bar_Stress(truss_stress, U_end), "Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")
-    save_figure(plots.Plot_Shape_Bar_Failure(pass_yn,U_end), "Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
+    # save_figure(plots.Plot_Shape_Bar_Stress(truss_stress, U_end), "Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")
+    # save_figure(plots.Plot_Shape_Bar_Failure(pass_yn,U_end), "Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
     
     fig1=plots.Plot_Shape_Bar_Stress(truss_stress, U_end)
     fig2=plots.Plot_Shape_Bar_Failure(pass_yn,U_end)

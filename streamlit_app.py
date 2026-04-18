@@ -25,10 +25,14 @@ st.subheader("Setting up the deployable bridge")
 
 BridgeType = st.selectbox("Select type of deployable bridges:",['kirigami','origami','scissor','improved scissor','rolling'])
 
-
-N = st.selectbox(
-     "Select a number for sections:",
-     [2,4,6,8])
+if BridgeType =='origami':
+    N = st.selectbox(
+         "Select a number for sections:",
+         [2,3,4])
+else:
+    N = st.selectbox(
+         "Select a number for sections:",
+         [2,4,6,8])
 
 L = st.selectbox(
      "Length of the sections (m):",
@@ -47,6 +51,12 @@ DepRate = st.selectbox(
 
 if BridgeType=='kirigami':        
     fig1,fig2=kirigami_deploy(L, N, DepRate)    
+    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
+    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
+    st.pyplot(fig1)
+    st.pyplot(fig2)
+elif BridgeType=='origami':   
+    fig1,fig2=origami_deploy(L, N, DepRate)    
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
     st.pyplot(fig1)

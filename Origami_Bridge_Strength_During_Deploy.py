@@ -133,21 +133,20 @@ def write_summary(name, lines):
     print(f"Saved: {path}")
 
 
-def main():
+def origami_deploy(   L,
+   N,
+   dep_rate,
+   barA = 0.00415,
+   barE = 2.0e11,
+   Ix = 7.16e-6,
+   Fy = 345e6,
+   Fu = 427e6,
+   Rp = 1.0,):
     start = time.time()
 
-    L = 2.0
-    W = 4.0
-    H = 2.0
-    N = 4
-    dep_rate = 0.3
-    barA = 0.00415
-    barE = 2.0e11
-    Ix = 7.16e-6
-    Fy = 345e6
-    Fu = 427e6
+ 
     An = barA * 0.9
-    Rp = 1.0
+
     r_val = np.sqrt(Ix / barA)
 
     local_ok, lambda_r = local_buckling_pass(barE, Fy)
@@ -156,7 +155,7 @@ def main():
     print(f"  lambda_r = {lambda_r:.2f}")
 
     assembly, node, bar, cst, rot_spr_4N, plots = build_origami_bridge(
-        L=L, W=W, H=H, N=N, barA=barA, barE=barE,
+        L=L, W=2*L, H=L, N=N, barA=barA, barE=barE,
         panel_E=2.0e8, panel_t=0.01, panel_v=0.3, rotK=1.0e8,
     )
     offset, dep_step, dep_steps = deployment_offset(node.coordinates_mat.shape[0], dep_rate)
@@ -195,28 +194,13 @@ def main():
             break
 
     Uaverage = -float(np.mean(U_end[[38 - 1, 39 - 1], 2]))
-    np.savetxt(
-        os.path.join(OUT_DIR, "Origami_Bridge_Strength_During_Deploy_Step_History.csv"),
-        np.asarray(history), delimiter=",", header="step,total_load_N,max_DCR,all_members_safe", comments="",
-    )
-    summary = [
-        "Origami_Bridge_Strength_During_Deploy",
-        f"Deployment rate: {dep_rate:.3f}",
-        f"Deployment step: {dep_step}/{dep_steps}",
-        f"Final checked step: {final_step}",
-        f"Total length of all bars: {L_total:.2f} m",
-        f"Total bar weight: {W_bar:.2f} N",
-        f"Deck weight: {W_deck:.2f} N",
-        f"Maximum stress ratio: {np.nanmax(dcr):.3f}",
-        f"Tip deflection: {Uaverage:.6f} m",
-        f"Execution time: {time.time() - start:.2f} s",
-    ]
-    write_summary("Origami_Bridge_Strength_During_Deploy_Summary.txt", summary)
+    
+    plots.viewAngle1=10
+    plots.viewAngle2=-75 
 
     truss_stress = truss_strain * bar.E_vec
     save_figure(plots.Plot_Shape_Bar_Stress(truss_stress), "Origami_Bridge_Strength_During_Deploy_Bar_Stress.png")
     save_figure(plots.Plot_Shape_Bar_Failure(pass_yn), "Origami_Bridge_Strength_During_Deploy_Bar_Failure.png")
-    save_figure(plots.Plot_Deformed_Shape(U_end), "Origami_Bridge_Strength_During_Deploy_Deformed.png")
 
 
 if __name__ == "__main__":

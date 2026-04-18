@@ -82,7 +82,7 @@ def kirigami_fail(L, N, barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6, Fy = 345e6,
         [16 * N + 2 - 1, 1, 1, 1],
     ], dtype=float)
 
-    force = 4000.0
+    force = 10000.0
     history = []
     Uhis = U_end = truss_strain = pass_yn = dcr = None
     total_F = 0.0
@@ -121,8 +121,8 @@ def kirigami_fail(L, N, barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6, Fy = 345e6,
     plots.view_angle2=-75 
 
     truss_stress = truss_strain * bar.E_vec
-    save_figure(plots.Plot_Shape_Bar_Stress(truss_stress, U_end), "Kirigami_Truss_Load_To_Fail_Bar_Stress.png")
-    save_figure(plots.Plot_Shape_Bar_Failure(pass_yn, U_end), "Kirigami_Truss_Load_To_Fail_Bar_Failure.png")
+    # save_figure(plots.Plot_Shape_Bar_Stress(truss_stress, U_end), "Kirigami_Truss_Load_To_Fail_Bar_Stress.png")
+    # save_figure(plots.Plot_Shape_Bar_Failure(pass_yn, U_end), "Kirigami_Truss_Load_To_Fail_Bar_Failure.png")
     
     fig1=plots.Plot_Shape_Bar_Stress(truss_stress, U_end)
     fig2=plots.Plot_Shape_Bar_Failure(pass_yn,U_end)

@@ -90,7 +90,7 @@ def main():
         [N * 9 + 3 - 1, 1, 1, 1],
     ], dtype=float)
 
-    force = 1000.0
+    force = 10000.0
     history = []
     Uhis = U_end = truss_strain = pass_yn = dcr = None
     total_F = 0.0
@@ -123,31 +123,13 @@ def main():
     mid_i = N // 2 + 1
     mid_nodes = [9 * (mid_i - 1) + 2 - 1, 9 * (mid_i - 1) + 3 - 1]
     Uaverage = -float(np.mean(U_end[mid_nodes, 2]))
-    Kstiff = total_F / Uaverage if abs(Uaverage) > 1.0e-12 else np.inf
 
-    np.savetxt(
-        os.path.join(OUT_DIR, "Origami_Bridge_Load_To_Fail_Step_History.csv"),
-        np.asarray(history), delimiter=",", header="step,total_load_N,max_DCR,all_members_safe", comments="",
-    )
-    summary = [
-        "Origami_Bridge_Load_To_Fail",
-        f"Failed or final step: {failed_step}",
-        f"Total length of all bars: {L_total:.2f} m",
-        f"Total bar weight: {W_bar:.2f} N",
-        f"Failure load: {total_F:.2f} N",
-        f"Mid-span deflection at failure: {Uaverage:.6f} m",
-        f"Stiffness: {Kstiff:.2f} N/m",
-        f"span/disp at failure: {16.0 / Uaverage:.2f}",
-        f"capacity/weight: {total_F / W_bar:.2f}",
-        f"Maximum DCR: {np.nanmax(dcr):.3f}",
-        f"Execution time: {time.time() - start:.2f} s",
-    ]
-    write_summary("Origami_Bridge_Load_To_Fail_Summary.txt", summary)
+    plots.viewAngle1=10
+    plots.viewAngle2=-75 
 
     truss_stress = truss_strain * bar.E_vec
-    save_figure(plots.Plot_Shape_Bar_Stress(truss_stress), "Origami_Bridge_Load_To_Fail_Bar_Stress.png")
+    save_figure(plots.Plot_Bar_Stress(truss_stress), "Origami_Bridge_Load_To_Fail_Bar_Stress.png")
     save_figure(plots.Plot_Shape_Bar_Failure(pass_yn), "Origami_Bridge_Load_To_Fail_Bar_Failure.png")
-    save_figure(plots.Plot_Deformed_Shape(U_end), "Origami_Bridge_Load_To_Fail_Deformed.png")
 
 
 if __name__ == "__main__":
