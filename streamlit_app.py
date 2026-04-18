@@ -45,8 +45,8 @@ st.text('Here we quickly set up the deployable kirigami truss bridge by picking 
 
 if BridgeType=='kirigami':        
     fig1,fig2=kirigami_deploy(L, N,)    
-    st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
-    st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
+    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
+    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
     st.pyplot(fig1)
     st.pyplot(fig2)
 
