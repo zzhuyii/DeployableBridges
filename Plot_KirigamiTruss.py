@@ -392,84 +392,10 @@ class Plot_KirigamiTruss:
         
         ax.legend(handles=legend_patches, loc='upper left', bbox_to_anchor=(0, 1))           
         plt.gca().set_aspect('equal')    
-        fig.update_layout(self.width, self.height)
         plt.show()
         return fig
 
-    def Plot_Deformed_History(self, Uhis):
-        view1 = self.view_angle1
-        view2 = self.view_angle2
-        Vsize = self.display_range
-        Vratio = self.display_range_ratio
-    
-        assembly = self.assembly
-        undeformedNode = assembly.node.coordinates_mat
-        pauseTime = getattr(self, 'holdTime', 0.1)
-        filename = self.file_name
-    
-        Incre = Uhis.shape[0]
-        images = []
-    
-        fig = plt.figure(figsize=(self.width, self.height))
-        ax = fig.add_subplot(111, projection='3d')
-    
-        for i in range(Incre):
-            ax.clear()
-            ax.view_init(view1, view2)
-            ax.set_facecolor('white')
-            plt.gca().set_aspect('auto', adjustable='box')
-    
-            # Set axis limits
-            if isinstance(Vsize,(list, tuple, np.ndarray)):
-                # single row, like [-1, L*(N+1), -1, 2, -1, 2]
-                ax.set_xlim(Vsize[0], Vsize[1])
-                ax.set_ylim(Vsize[2], Vsize[3])
-                ax.set_zlim(Vsize[4], Vsize[5])
-            else:
-                ax.set_xlim(-Vsize*Vratio, Vsize)
-                ax.set_ylim(-Vsize*Vratio, Vsize)
-                ax.set_zlim(-Vsize*Vratio, Vsize)
-    
-            tempU = Uhis[i, :, :]
-            deformNode = undeformedNode + tempU
-    
-            # Plot bars (black lines)
-            barConnect = assembly.bar.node_ij_mat
-            barNum = len(barConnect)
-            for j in range(barNum):
-                n1, n2 = barConnect[j]
-                node1 = deformNode[n1-1]
-                node2 = deformNode[n2-1]
-                ax.plot([node1[0], node2[0]],
-                        [node1[1], node2[1]],
-                        [node1[2], node2[2]], color='k')
-    
-            # Plot CST panels in yellow to match the deploy final shape.
-            cstIJK = assembly.cst.node_ijk_mat
-            panelNum = len(cstIJK)
-            for k in range(panelNum):
-                nodeNumVec = cstIJK[k]
-                v = [deformNode[nn-1] for nn in nodeNumVec]  # MATLAB to Python index
-                verts = [v]
-                patch = Poly3DCollection(verts, facecolors='yellow', linewidths=1, edgecolors='k')
-                ax.add_collection3d(patch)
-    
-            # Save frame. Newer Matplotlib Agg canvases expose buffer_rgba()
-            # instead of tostring_rgb().
-            fig.canvas.draw()
-            try:
-                image = np.asarray(fig.canvas.buffer_rgba())[:, :, :3]
-            except AttributeError:
-                image = np.frombuffer(fig.canvas.tostring_rgb(), dtype='uint8')
-                image = image.reshape(fig.canvas.get_width_height()[::-1] + (3,))
-            images.append(image.copy())
-    
-        plt.close(fig)    
-        # Write to GIF
-        imageio.mimsave(filename, images, duration=pauseTime)
 
-    def Plot_Deformed_His(self, Uhis):
-        return self.Plot_Deformed_History(Uhis)
 
     def Plot_Shape_Bar_Stress(self, bar_stress, U):
         view1 = self.view_angle1
@@ -570,6 +496,5 @@ class Plot_KirigamiTruss:
 
         ax.view_init(view1, view2)
         plt.gca().set_aspect('equal')
-        fig.update_layout(self.width, self.height)
         plt.show()
         return fig
