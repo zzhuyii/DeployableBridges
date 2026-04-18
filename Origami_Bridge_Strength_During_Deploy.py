@@ -200,7 +200,7 @@ def origami_deploy(   L,
     # save_figure(plots.Plot_Shape_Bar_Stress(truss_stress), "Origami_Bridge_Strength_During_Deploy_Bar_Stress.png")
     # save_figure(plots.Plot_Shape_Bar_Failure(pass_yn), "Origami_Bridge_Strength_During_Deploy_Bar_Failure.png")
             
-    fig1=plots.Plot_Shape_Bar_Stress(truss_stress, U_end)
+    fig1=plots.Plot_Bar_Stress(truss_stress, U_end)
     fig2=plots.Plot_Shape_Bar_Failure(pass_yn,U_end)
 
     return fig1, fig2
