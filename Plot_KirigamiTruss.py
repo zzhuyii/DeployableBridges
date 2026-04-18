@@ -6,7 +6,7 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
 class Plot_KirigamiTruss:
     def __init__(self, view_angle1=15, view_angle2=90, display_range=10, display_range_ratio=1,
-                 x0=100, y0=100, width=800, height=400, hold_time=0.5, filename="deformed.gif"):
+                 x0=100, y0=100, width=6, height=3, hold_time=0.5, filename="deformed.gif"):
         self.assembly = None
         self.view_angle1 = view_angle1
         self.view_angle2 = view_angle2
@@ -32,7 +32,7 @@ class Plot_KirigamiTruss:
         cstIJK = assembly.cst.node_ijk_mat
         panelNum = len(cstIJK)
     
-        fig = plt.figure(figsize=(self.width / self.sizeFactor, self.height / self.sizeFactor))
+        fig = plt.figure(figsize=(self.width, self.height))
         ax = fig.add_subplot(111, projection='3d')
         ax.view_init(view1, view2)
         ax.set_facecolor('white')
@@ -81,7 +81,7 @@ class Plot_KirigamiTruss:
         cstIJK = assembly.cst.node_ijk_mat
         panelNum = len(cstIJK)
     
-        fig = plt.figure(figsize=(self.width / self.sizeFactor, self.height / self.sizeFactor))
+        fig = plt.figure(figsize=(self.width, self.height))
         ax = fig.add_subplot(111, projection='3d')
         ax.view_init(view1, view2)
         ax.set_facecolor('white')
@@ -139,7 +139,7 @@ class Plot_KirigamiTruss:
         cstIJK = assembly.cst.node_ijk_mat
         panelNum = len(cstIJK)
     
-        fig = plt.figure(figsize=(self.width / self.sizeFactor, self.height / self.sizeFactor))
+        fig = plt.figure(figsize=(self.width, self.height))
         ax = fig.add_subplot(111, projection='3d')
         ax.view_init(view1, view2)
         ax.set_facecolor('white')
@@ -196,7 +196,7 @@ class Plot_KirigamiTruss:
         cstIJK = assembly.cst.node_ijk_mat
         panelNum = len(cstIJK)
     
-        fig = plt.figure(figsize=(self.width / self.sizeFactor, self.height / self.sizeFactor))
+        fig = plt.figure(figsize=(self.width, self.height))
         ax = fig.add_subplot(111, projection='3d')
         ax.view_init(view1, view2)
         ax.set_facecolor('white')
@@ -255,7 +255,7 @@ class Plot_KirigamiTruss:
         assembly = self.assembly
         undeformedNode = assembly.node.coordinates_mat
     
-        fig = plt.figure(figsize=(self.width / self.sizeFactor, self.height / self.sizeFactor))
+        fig = plt.figure(figsize=(self.width, self.height))
         ax = fig.add_subplot(111, projection='3d')
         ax.view_init(view1, view2)
         ax.set_facecolor('white')
@@ -321,7 +321,7 @@ class Plot_KirigamiTruss:
         undeformedNode = assembly.node.coordinates_mat
         deformNode = undeformedNode + U  # U is (N,3) numpy array
     
-        fig = plt.figure(figsize=(self.width / self.sizeFactor, self.height / self.sizeFactor))
+        fig = plt.figure(figsize=(self.width, self.height))
         ax = fig.add_subplot(111, projection='3d')
         ax.view_init(view1, view2)
         ax.set_facecolor('white')
@@ -409,7 +409,7 @@ class Plot_KirigamiTruss:
         Incre = Uhis.shape[0]
         images = []
     
-        fig = plt.figure(figsize=(self.width / self.sizeFactor, self.height / self.sizeFactor))
+        fig = plt.figure(figsize=(self.width, self.height))
         ax = fig.add_subplot(111, projection='3d')
     
         for i in range(Incre):
@@ -482,7 +482,7 @@ class Plot_KirigamiTruss:
         bar_connect = self.assembly.bar.node_ij_mat
         bar_stress = np.asarray(bar_stress, dtype=float).reshape(-1)
 
-        fig = plt.figure(figsize=(self.width / self.sizeFactor, self.height / self.sizeFactor))
+        fig = plt.figure(figsize=(self.width, self.height))
         ax = fig.add_subplot(111, projection='3d')        
         ax.set_facecolor('white')
 
@@ -546,7 +546,7 @@ class Plot_KirigamiTruss:
         bar_connect = self.assembly.bar.node_ij_mat
         pass_yn = np.asarray(pass_yn, dtype=bool).reshape(-1)
 
-        fig = plt.figure(figsize=(self.width / self.sizeFactor, self.height / self.sizeFactor))
+        fig = plt.figure(figsize=(self.width, self.height))
         ax = fig.add_subplot(111, projection='3d')
         
         ax.set_facecolor('white')
