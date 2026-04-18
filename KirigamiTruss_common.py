@@ -27,7 +27,7 @@ def build_kirigami_truss(L, N,
     rot3K=1.0e8,
 ):
 
-    gap=0.0,
+    gap=0.0
 
     node = Elements_Nodes()
     cst = Vec_Elements_CST()

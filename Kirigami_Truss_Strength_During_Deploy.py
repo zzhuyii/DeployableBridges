@@ -31,11 +31,15 @@ def bar_length_and_weight(node, bar, rho_steel=7850.0, g=9.81):
     return total_length, total_weight
 
 
-def deployment_offset(node_count, dep_rate):
+def deployment_offset(node_count, dep_rate, N):
     deploy_path = os.path.abspath("KirigamiUhis.npy")
     if not os.path.exists(deploy_path):
         return np.zeros((node_count, 3), dtype=float)
+
     Uhis = np.load(deploy_path)
+    print(Uhis.shape)
+    Uhis = Uhis[:,0:(N*16+4),:]
+    
     dep_step = max(1, int((1.0 - dep_rate) * Uhis.shape[0]))
     idx = min(Uhis.shape[0], dep_step) - 1
     print(f"Using deployment history step {idx + 1}/{Uhis.shape[0]} from {deploy_path}")
@@ -79,7 +83,7 @@ def kirigami_deploy(L, N, dep_rate = 0.3, barA = 0.00415, barE = 2.0e11, Ix = 7.
         panel_E=2.0e8, panel_t=0.01, panel_v=0.3,
         rot4K=1.0e7, rot3K=1.0e8,
     )
-    node.coordinates_mat = node.coordinates_mat + deployment_offset(node.coordinates_mat.shape[0], dep_rate)
+    node.coordinates_mat = node.coordinates_mat + deployment_offset(node.coordinates_mat.shape[0], dep_rate, N)
     assembly.Initialize_Assembly()
     L_total, W_bar = bar_length_and_weight(node, bar)
     W_deck = 2.0 * (0.03 + 10.0 / 50.0 * 0.2) * 16.0 * 1000.0 * 9.8
