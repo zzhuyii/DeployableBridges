@@ -53,26 +53,15 @@ def write_summary(name, lines):
     print(f"Saved: {path}")
 
 
-def main():
-    start = time.time()
+def origami_fail(L = 2.0, W = 4.0, H = 2.0, N = 4, barA = 0.00415,
+    barE = 2.0e11, Ix = 7.16e-6, Fy = 345e6, Fu = 427e6, Rp = 1.0):
 
-    L = 2.0
-    W = 4.0
-    H = 2.0
-    N = 4
-    barA = 0.00415
-    barE = 2.0e11
-    Ix = 7.16e-6
-    Fy = 345e6
-    Fu = 427e6
     An = barA * 0.9
-    Rp = 1.0
     r_val = np.sqrt(Ix / barA)
 
     local_ok, lambda_r = local_buckling_pass(barE, Fy)
     print("--- Local Buckling Check (AASHTO LRFD Art. 6.9.4.2) ---")
     print("  Section is non-slender (local buckling OK)" if local_ok else "  WARNING: Section fails local buckling slenderness limit")
-    print(f"  lambda_r = {lambda_r:.2f}")
 
     assembly, node, bar, cst, rot_spr_4N, plots = build_origami_bridge(
         L=L, W=W, H=H, N=N, barA=barA, barE=barE,
@@ -120,17 +109,15 @@ def main():
             failed_step = step
             break
 
-    mid_i = N // 2 + 1
-    mid_nodes = [9 * (mid_i - 1) + 2 - 1, 9 * (mid_i - 1) + 3 - 1]
-    Uaverage = -float(np.mean(U_end[mid_nodes, 2]))
-
     plots.viewAngle1=10
     plots.viewAngle2=-75 
 
     truss_stress = truss_strain * bar.E_vec
-    save_figure(plots.Plot_Bar_Stress(truss_stress), "Origami_Bridge_Load_To_Fail_Bar_Stress.png")
-    save_figure(plots.Plot_Shape_Bar_Failure(pass_yn), "Origami_Bridge_Load_To_Fail_Bar_Failure.png")
+    # save_figure(plots.Plot_Bar_Stress(truss_stress), "Origami_Bridge_Load_To_Fail_Bar_Stress.png")
+    # save_figure(plots.Plot_Shape_Bar_Failure(pass_yn), "Origami_Bridge_Load_To_Fail_Bar_Failure.png")
+    
+    fig1=plots.Plot_Bar_Stress(truss_stress, U_end)
+    fig2=plots.Plot_Shape_Bar_Failure(pass_yn,U_end)
 
+    return fig1, fig2
 
-if __name__ == "__main__":
-    main()

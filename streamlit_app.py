@@ -78,7 +78,12 @@ if BridgeType=='kirigami':
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
     st.pyplot(fig1)
     st.pyplot(fig2)
-
+elif BridgeType=='origami':   
+    fig1,fig2=origami_fail(L, N, DepRate)    
+    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
+    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
+    st.pyplot(fig1)
+    st.pyplot(fig2)
 
 
 
