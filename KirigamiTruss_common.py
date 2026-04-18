@@ -18,9 +18,8 @@ from Plot_KirigamiTruss import Plot_KirigamiTruss
 
 
 def build_kirigami_truss(
-    L=2.0,
-    gap=0.0,
-    N=8,
+    L,    
+    N,
     barA=0.0023,
     barE=2.0e11,
     panel_E=2.0e8,
@@ -29,8 +28,8 @@ def build_kirigami_truss(
     rot4K=10.0,
     rot3K=1.0e8,
 ):
-    if N != 8:
-        raise ValueError("Kirigami_Truss_Deploy.m uses N=8; refusing to build a legacy N!=8 model.")
+
+    gap=0.0,
 
     node = Elements_Nodes()
     cst = Vec_Elements_CST()
