@@ -38,13 +38,18 @@ L = st.selectbox(
 
 st.subheader("Strength during deployment")
 
+DepRate = st.selectbox(
+     "Deployment Ratio:",
+     [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0])
+
+
 st.text('Here we quickly set up the deployable kirigami truss bridge by picking ' +
         'the number of sections and truss areas. The following pre-simulated ' +
         'GIF will show the deployment kinematics. This GIF shows a bridge with.' +
         'a section length to be 1 meter')
 
 if BridgeType=='kirigami':        
-    fig1,fig2=kirigami_deploy(L, N)    
+    fig1,fig2=kirigami_deploy(L, N, DepRate)    
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
     st.pyplot(fig1)
