@@ -86,22 +86,8 @@ def _parse_mat_matrix(payload, variable_name):
 
 
 def deployment_offset(node_count, dep_rate):
-    deploy_dir = os.path.abspath(os.path.join(OUT_DIR, "..", "Deploy"))
-    npy_path = os.path.join(deploy_dir, "OrigamiUhis.npy")
-    mat_path = os.path.abspath(os.path.join(
-        OUT_DIR, "..", "..", "..", "2026-DeployableBridges", "OrigamiUhis.mat"
-    ))
-
-    if os.path.exists(npy_path):
-        Uhis = np.load(npy_path)
-    elif os.path.exists(mat_path):
-        Uhis = _read_mat_v5_array(mat_path, "Uhis")
-        os.makedirs(deploy_dir, exist_ok=True)
-        np.save(npy_path, Uhis)
-        print(f"Cached deployment history: {npy_path}")
-    else:
-        print("WARNING: Origami deployment history not found; using zero deployment offset.")
-        return np.zeros((node_count, 3), dtype=float), 0, 0
+    npy_path = os.path.join("OrigamiUhis.npy")
+    Uhis = np.load(npy_path)
 
     if Uhis.shape[1:] != (node_count, 3):
         raise ValueError(f"OrigamiUhis shape {Uhis.shape} does not match node_count={node_count}")
@@ -126,27 +112,10 @@ def check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp):
     return truss_strain, pass_yn, dcr
 
 
-def write_summary(name, lines):
-    path = os.path.join(OUT_DIR, name)
-    with open(path, "w", encoding="utf-8") as f:
-        f.write("\n".join(lines) + "\n")
-    print(f"Saved: {path}")
-
-
-def origami_deploy(   L,
-   N,
-   dep_rate,
-   barA = 0.00415,
-   barE = 2.0e11,
-   Ix = 7.16e-6,
-   Fy = 345e6,
-   Fu = 427e6,
-   Rp = 1.0,):
-    start = time.time()
-
- 
+def origami_deploy(L,N,dep_rate,barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6,
+                   Fy = 345e6, Fu = 427e6, Rp = 1.0,):
+    
     An = barA * 0.9
-
     r_val = np.sqrt(Ix / barA)
 
     local_ok, lambda_r = local_buckling_pass(barE, Fy)
@@ -197,8 +166,8 @@ def origami_deploy(   L,
     plots.viewAngle2=-75 
 
     truss_stress = truss_strain * bar.E_vec
-    # save_figure(plots.Plot_Shape_Bar_Stress(truss_stress), "Origami_Bridge_Strength_During_Deploy_Bar_Stress.png")
-    # save_figure(plots.Plot_Shape_Bar_Failure(pass_yn), "Origami_Bridge_Strength_During_Deploy_Bar_Failure.png")
+    save_figure(plots.Plot_Bar_Stress(truss_stress, U_end), "Origami_Bridge_Strength_During_Deploy_Bar_Stress.png")
+    save_figure(plots.Plot_Shape_Bar_Failure(pass_yn, U_end), "Origami_Bridge_Strength_During_Deploy_Bar_Failure.png")
             
     fig1=plots.Plot_Bar_Stress(truss_stress, U_end)
     fig2=plots.Plot_Shape_Bar_Failure(pass_yn,U_end)

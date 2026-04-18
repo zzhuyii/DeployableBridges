@@ -46,13 +46,6 @@ def check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp, K_eff=1.0):
     return truss_strain, internal_force, pass_yn, dcr
 
 
-def write_summary(name, lines):
-    path = os.path.join(OUT_DIR, name)
-    with open(path, "w", encoding="utf-8") as f:
-        f.write("\n".join(lines) + "\n")
-    print(f"Saved: {path}")
-
-
 def kirigami_fail(L, N, barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6, Fy = 345e6, Fu = 427e6, Rp = 1.0):
     
     start = time.time()
@@ -63,7 +56,6 @@ def kirigami_fail(L, N, barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6, Fy = 345e6,
     local_ok, lambda_r = local_buckling_pass(barE, Fy)
     print("--- Local Buckling Check (AASHTO LRFD Art. 6.9.4.2) ---")
     print("  Section is non-slender (local buckling OK)" if local_ok else "  WARNING: Section fails local buckling slenderness limit")
-    print(f"  lambda_r = {lambda_r:.2f}")
 
     assembly, node, bar, cst, rot_spr_4N, rot_spr_3N, plots = build_kirigami_truss(
         L=L, N=N, barA=barA, barE=barE,
