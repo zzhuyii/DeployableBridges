@@ -11,13 +11,14 @@ from Solver_NR_Loading import Solver_NR_Loading
 from Kirigami_Truss_Strength_During_Deploy import kirigami_deploy
 from Kirigami_Truss_Load_To_Fail import kirigami_fail
 
+
 st.subheader("Simulation of of deployable bridge")
 
 st.text('This is a demo for using the Sim-FAST package to simulate the deployment ' + 
         'and load carrying capacity of different deployable bridges. We assume that ' +
         'connections are rigid, all members share the same cross-section, and ' +
         'ignore buckling related failure mode when calculating the loading.' +
-        'For more detailed control of the simulation, please find the MATLAB' +
+        'For more detailed control of the simulation, please find the MATLAB ' +
         'code from: https://github.com/zzhuyii/Sim-FAST')
 
 st.subheader("Setting up the deployable bridge")
@@ -29,23 +30,20 @@ N = st.selectbox(
      "Select a number for sections:",
      [2,4,6,8])
 
-barA = st.selectbox("Bar Area (m2)):",         
-     [0.0001, 0.0004, 0.001, 0.004, 0.01, 0.04])
-
 L = st.selectbox(
      "Length of the sections (m):",
      [1.0,1.5,2.0,2.5,3.0])
 
 st.subheader("Strength during deployment")
 
+st.text('Here, we check the truss strength during the deployment process.' + 
+        'You can change deployment ratio for different stage of deployment' +
+        'The load applied is the bridge self-weight with AASHTO factors.')
+
 DepRate = st.selectbox(
      "Deployment Ratio:",
      [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0])
 
-
-st.text('Here, we check the truss strength during the deployment process.' + 
-        'You can change deployment ratio for different stage of deployment' +
-        'The load applied is the bridge self-weight with AASHTO factors.')
 
 if BridgeType=='kirigami':        
     fig1,fig2=kirigami_deploy(L, N, DepRate)    
@@ -58,7 +56,11 @@ if BridgeType=='kirigami':
 st.subheader("Load to failure after deployment")
 
 st.text('Here we load the bridge all the way to failure. We will study' + 
-        ' the capacity of the bridge and the efficiency of the bridge.' )
+        ' the capacity of the bridge and the efficiency of the bridge.' +
+        ' When bridge is short, failure may not happen after the software ' +
+        'reach the maximum 100 step for loading. Because an incremental ' +
+        'iterative nonlinear loading solver is used, finding ultimate ' +
+        'load can be slower.')
 
 if BridgeType=='kirigami':        
     fig1,fig2=kirigami_fail(L, N)    
