@@ -37,6 +37,23 @@ class Solver_NR_Loading:
         
         # The history of displacement field
         self.u_his = None
+        self.verbose = False
+
+    @property
+    def increStep(self):
+        return self.incre_step
+
+    @increStep.setter
+    def increStep(self, value):
+        self.incre_step = int(value)
+
+    @property
+    def iterMax(self):
+        return self.iter_max
+
+    @iterMax.setter
+    def iterMax(self, value):
+        self.iter_max = int(value)
     
     def Solve(self):
         """
@@ -61,7 +78,8 @@ class Solver_NR_Loading:
         node_num = U.shape[0]
         self.u_his = np.zeros((incre_step, node_num, 3),dtype=np.float64)
         
-        print('Loading Analysis Start')
+        if self.verbose:
+            print('Loading Analysis Start')
         
         # Find the external forces that are currently applied on the structure
         current_applied_force = np.zeros(3 * node_num,np.float64)
@@ -74,7 +92,6 @@ class Solver_NR_Loading:
         
         for i in range(load_size):
             temp_node_num = int(load[i, 0])
-            print(temp_node_num)
             load_vec[temp_node_num*3 ] = load[i, 1]  # X component
             load_vec[temp_node_num*3 + 1] = load[i, 2]  # Y component  
             load_vec[temp_node_num*3 + 2] = load[i, 3]  # Z component
@@ -84,7 +101,8 @@ class Solver_NR_Loading:
             step = 1
             R = 1
             lambda_factor = i + 1  # Load factor (MATLAB uses 1-based indexing)
-            print(f'Increment = {i+1}')
+            if self.verbose:
+                print(f'Increment = {i+1}')
             
             # Newton-Raphson iteration loop
             while step < iter_max and R > tol:
@@ -94,13 +112,14 @@ class Solver_NR_Loading:
                 # Calculate the unbalanced force
                 unbalance = current_applied_force + lambda_factor * load_vec - T
                 
-                print(unbalance)
-                
                 # Apply boundary conditions (modify K and unbalance for supports)
                 K, unbalance = self.mod_k_for_supp(K, supp, unbalance)
 
                 # Solve for displacement
-                dU_temp = np.linalg.solve(K, unbalance)
+                try:
+                    dU_temp = np.linalg.solve(K, unbalance)
+                except np.linalg.LinAlgError:
+                    dU_temp = np.linalg.lstsq(K, unbalance, rcond=None)[0]
                 
                 # Update displacements
                 for j in range(node_num):
@@ -108,7 +127,8 @@ class Solver_NR_Loading:
                 
                 # Calculate residual
                 R = np.linalg.norm(dU_temp)
-                print(f'    Iteration = {step}, R = {R:.6e}')
+                if self.verbose:
+                    print(f'    Iteration = {step}, R = {R:.6e}')
                 step += 1
             
             # Store displacement history
@@ -122,15 +142,14 @@ class Solver_NR_Loading:
     def mod_k_for_supp(self, K, supp, unbalance):
         K_mod = np.array(K, dtype=float)
         unbalance_mod = np.array(unbalance, dtype=float)
-        for s in supp:
-            node_id = s[0] 
+        for s in np.asarray(supp, dtype=float):
+            node_id = int(s[0])
             for dim in range(3):
                 if s[dim+1] == 1:
                     idx = 3*node_id + dim
-                    Kvv=max(K_mod[idx,idx],100);
+                    Kvv = K_mod[idx, idx]
                     K_mod[idx, :] = 0
                     K_mod[:, idx] = 0
-                    K_mod[idx, idx] = Kvv
+                    K_mod[idx, idx] = Kvv if abs(Kvv) >= 100 else 100.0
                     unbalance_mod[idx] = 0
         return K_mod, unbalance_mod
-

@@ -1,13 +1,24 @@
 import numpy as np
 
 
-class Assembly_KirigamiTruss:
+class Assembly_Scissor_Bridge:
+    """Assembly object matching the MATLAB scissor bridge class."""
+
     def __init__(self):
         self.node = None
-        self.rot_spr_4N = None
-        self.rot_spr_3N = None
         self.cst = None
         self.bar = None
+        self.actBar = None
+        self.rot_spr_3N = None
+        self.rot_spr_4N = None
+
+    @property
+    def rotSpr3(self):
+        return self.rot_spr_3N
+
+    @rotSpr3.setter
+    def rotSpr3(self, value):
+        self.rot_spr_3N = value
 
     @property
     def rotSpr(self):
@@ -21,7 +32,7 @@ class Assembly_KirigamiTruss:
         self.node.current_U_mat = np.zeros_like(self.node.coordinates_mat, dtype=float)
         self.node.current_ext_force_mat = np.zeros_like(self.node.coordinates_mat, dtype=float)
 
-        for element in (self.rot_spr_4N, self.cst, self.bar, self.rot_spr_3N):
+        for element in (self.bar, self.rot_spr_3N, self.rot_spr_4N, self.cst, self.actBar):
             if element is not None:
                 element.Initialize(self.node)
 
@@ -30,7 +41,7 @@ class Assembly_KirigamiTruss:
         T = np.zeros(3 * node_num, dtype=float)
         K = np.zeros((3 * node_num, 3 * node_num), dtype=float)
 
-        for element in (self.cst, self.bar, self.rot_spr_4N, self.rot_spr_3N):
+        for element in (self.cst, self.bar, self.rot_spr_3N, self.rot_spr_4N, self.actBar):
             if element is not None:
                 Te, Ke = element.Solve_FK(self.node, U)
                 T += Te

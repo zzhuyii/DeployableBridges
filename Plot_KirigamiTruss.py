@@ -5,7 +5,7 @@ import imageio
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
 class Plot_KirigamiTruss:
-    def __init__(self, view_angle1=15, view_angle2=70, display_range=10, display_range_ratio=1,
+    def __init__(self, view_angle1=15, view_angle2=90, display_range=10, display_range_ratio=1,
                  x0=100, y0=100, width=800, height=600, hold_time=0.5, filename="deformed.gif"):
         self.assembly = None
         self.view_angle1 = view_angle1
@@ -286,6 +286,14 @@ class Plot_KirigamiTruss:
     
         deformNode = undeformedNode + U  # U is (N,3) numpy array
     
+        # Plot deformed panels in the same yellow used by the MATLAB deploy views.
+        for k in range(panelNum):
+            nodeNumVec = cstIJK[k]
+            v = [deformNode[nn-1] for nn in nodeNumVec]  # MATLAB to Python
+            verts = [v]
+            patch = Poly3DCollection(verts, facecolors='yellow', alpha=1.0, linewidths=1, edgecolors='k')
+            ax.add_collection3d(patch)
+                        
         # Plot deformed bars (black lines)
         barConnect = assembly.bar.node_ij_mat
         barNum = len(barConnect)
@@ -295,15 +303,7 @@ class Plot_KirigamiTruss:
             node2 = deformNode[n2-1]
             ax.plot([node1[0], node2[0]],
                     [node1[1], node2[1]],
-                    [node1[2], node2[2]], color='k')
-    
-        # Plot deformed panels (yellow, alpha=0.2)
-        for k in range(panelNum):
-            nodeNumVec = cstIJK[k]
-            v = [deformNode[nn-1] for nn in nodeNumVec]  # MATLAB to Python
-            verts = [v]
-            patch = Poly3DCollection(verts, facecolors='yellow', alpha=0.2, linewidths=1, edgecolors='k')
-            ax.add_collection3d(patch)
+                    [node1[2], node2[2]], color='k')    
             
         plt.gca().set_aspect('equal')   
     
@@ -319,6 +319,7 @@ class Plot_KirigamiTruss:
     
         assembly = self.assembly
         undeformedNode = assembly.node.coordinates_mat
+        deformNode = undeformedNode + U  # U is (N,3) numpy array
     
         fig = plt.figure(figsize=(self.width / self.sizeFactor, self.height / self.sizeFactor))
         ax = fig.add_subplot(111, projection='3d')
@@ -343,7 +344,7 @@ class Plot_KirigamiTruss:
         panelNum = len(cstIJK) 
         for k in range(panelNum):
             nodeNumVec = cstIJK[k]
-            v = [undeformedNode[nn-1] for nn in nodeNumVec]  # MATLAB to Python
+            v = [deformNode[nn-1] for nn in nodeNumVec]  # MATLAB to Python
             verts = [v]
             patch = Poly3DCollection(verts, facecolors='yellow', alpha=0.2, linewidths=1, edgecolors='k')
             ax.add_collection3d(patch)
@@ -361,8 +362,8 @@ class Plot_KirigamiTruss:
         barNum = len(barConnect)
         for j in range(barNum):
             n1, n2 = barConnect[j]
-            node1 = undeformedNode[n1-1]
-            node2 = undeformedNode[n2-1]
+            node1 = deformNode[n1-1]
+            node2 = deformNode[n2-1]
             
             if Sx[j] > 4/5*(maxSx-minSx)+minSx:
                 colorTemp='red'
@@ -442,22 +443,131 @@ class Plot_KirigamiTruss:
                         [node1[1], node2[1]],
                         [node1[2], node2[2]], color='k')
     
-            # Plot CST panels (grey faces)
+            # Plot CST panels in yellow to match the deploy final shape.
             cstIJK = assembly.cst.node_ijk_mat
             panelNum = len(cstIJK)
             for k in range(panelNum):
                 nodeNumVec = cstIJK[k]
                 v = [deformNode[nn-1] for nn in nodeNumVec]  # MATLAB to Python index
                 verts = [v]
-                patch = Poly3DCollection(verts, facecolors=[(0.7, 0.7, 0.7)], linewidths=1, edgecolors='k')
+                patch = Poly3DCollection(verts, facecolors='yellow', linewidths=1, edgecolors='k')
                 ax.add_collection3d(patch)
     
-            # Save frame
+            # Save frame. Newer Matplotlib Agg canvases expose buffer_rgba()
+            # instead of tostring_rgb().
             fig.canvas.draw()
-            image = np.frombuffer(fig.canvas.tostring_rgb(), dtype='uint8')
-            image = image.reshape(fig.canvas.get_width_height()[::-1] + (3,))
+            try:
+                image = np.asarray(fig.canvas.buffer_rgba())[:, :, :3]
+            except AttributeError:
+                image = np.frombuffer(fig.canvas.tostring_rgb(), dtype='uint8')
+                image = image.reshape(fig.canvas.get_width_height()[::-1] + (3,))
             images.append(image.copy())
     
         plt.close(fig)    
         # Write to GIF
         imageio.mimsave(filename, images, duration=pauseTime)
+
+    def Plot_Deformed_His(self, Uhis):
+        return self.Plot_Deformed_History(Uhis)
+
+    def Plot_Shape_Bar_Stress(self, bar_stress, U):
+        view1 = self.view_angle1
+        view2 = self.view_angle2
+        Vsize = self.display_range
+        Vratio = self.display_range_ratio
+
+        node0 = self.assembly.node.coordinates_mat
+        deformNode = node0 + U  # U is (N,3) numpy array
+        
+        bar_connect = self.assembly.bar.node_ij_mat
+        bar_stress = np.asarray(bar_stress, dtype=float).reshape(-1)
+
+        fig = plt.figure(figsize=(self.width / self.sizeFactor, self.height / self.sizeFactor))
+        ax = fig.add_subplot(111, projection='3d')        
+        ax.set_facecolor('white')
+
+        if isinstance(Vsize, (list, tuple, np.ndarray)):
+            ax.set_xlim(Vsize[0], Vsize[1])
+            ax.set_ylim(Vsize[2], Vsize[3])
+            ax.set_zlim(Vsize[4], Vsize[5])
+        else:
+            ax.set_xlim(-Vsize * Vratio, Vsize)
+            ax.set_ylim(-Vsize * Vratio, Vsize)
+            ax.set_zlim(-Vsize * Vratio, Vsize)
+
+        cst_ijk = self.assembly.cst.node_ijk_mat
+        for tri in cst_ijk:
+            verts = [[deformNode[nn - 1] for nn in tri]]
+            patch = Poly3DCollection(verts, facecolors='yellow', alpha=0.2,
+                                     linewidths=0, edgecolors='k')
+            ax.add_collection3d(patch)
+
+        min_sx = float(np.min(bar_stress))
+        max_sx = float(np.max(bar_stress))
+        span = max(max_sx - min_sx, 1.0)
+
+        for stress, (n1, n2) in zip(bar_stress, bar_connect):
+            if stress > 4 / 5 * span + min_sx:
+                color = 'red'
+            elif stress > 3 / 5 * span + min_sx:
+                color = 'orange'
+            elif stress > 2 / 5 * span + min_sx:
+                color = 'yellow'
+            elif stress > 1 / 5 * span + min_sx:
+                color = 'green'
+            else:
+                color = 'blue'
+            p1 = deformNode[n1 - 1]
+            p2 = deformNode[n2 - 1]
+            ax.plot([p1[0], p2[0]], [p1[1], p2[1]], [p1[2], p2[2]],
+                    color=color, linewidth=2)
+
+        legend_patches = [
+            Patch(color="red", label="{:.1f} to {:.1f} MPa".format((4 / 5 * span + min_sx) / 1e6, max_sx / 1e6)),
+            Patch(color="orange", label="{:.1f} to {:.1f} MPa".format((3 / 5 * span + min_sx) / 1e6, (4 / 5 * span + min_sx) / 1e6)),
+            Patch(color="yellow", label="{:.1f} to {:.1f} MPa".format((2 / 5 * span + min_sx) / 1e6, (3 / 5 * span + min_sx) / 1e6)),
+            Patch(color="green", label="{:.1f} to {:.1f} MPa".format((1 / 5 * span + min_sx) / 1e6, (2 / 5 * span + min_sx) / 1e6)),
+            Patch(color="blue", label="{:.1f} to {:.1f} MPa".format(min_sx / 1e6, (1 / 5 * span + min_sx) / 1e6)),
+        ]
+        ax.legend(handles=legend_patches, loc='upper left', bbox_to_anchor=(0, 1))
+        ax.view_init(view1, view2)
+        plt.gca().set_aspect('equal')
+        plt.show()
+        return fig
+
+    def Plot_Shape_Bar_Failure(self, pass_yn, U):
+        view1 = self.view_angle1
+        view2 = self.view_angle2
+        Vsize = self.display_range
+        Vratio = self.display_range_ratio
+
+        node0 = self.assembly.node.coordinates_mat
+        deformNode = node0 + U  # U is (N,3) numpy array
+        bar_connect = self.assembly.bar.node_ij_mat
+        pass_yn = np.asarray(pass_yn, dtype=bool).reshape(-1)
+
+        fig = plt.figure(figsize=(self.width / self.sizeFactor, self.height / self.sizeFactor))
+        ax = fig.add_subplot(111, projection='3d')
+        
+        ax.set_facecolor('white')
+
+        if isinstance(Vsize, (list, tuple, np.ndarray)):
+            ax.set_xlim(Vsize[0], Vsize[1])
+            ax.set_ylim(Vsize[2], Vsize[3])
+            ax.set_zlim(Vsize[4], Vsize[5])
+        else:
+            ax.set_xlim(-Vsize * Vratio, Vsize)
+            ax.set_ylim(-Vsize * Vratio, Vsize)
+            ax.set_zlim(-Vsize * Vratio, Vsize)
+
+        for ok, (n1, n2) in zip(pass_yn, bar_connect):
+            p1 = deformNode[n1 - 1]
+            p2 = deformNode[n2 - 1]
+            color = 'green' if ok else 'red'
+            ax.plot([p1[0], p2[0]], [p1[1], p2[1]], [p1[2], p2[2]],
+                    color=color, linewidth=2)
+
+        ax.view_init(view1, view2)
+        plt.gca().set_aspect('equal')
+        plt.show()
+        return fig

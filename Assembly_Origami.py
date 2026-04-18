@@ -1,11 +1,10 @@
 import numpy as np
 
 
-class Assembly_KirigamiTruss:
+class Assembly_Origami:
     def __init__(self):
         self.node = None
         self.rot_spr_4N = None
-        self.rot_spr_3N = None
         self.cst = None
         self.bar = None
 
@@ -20,8 +19,7 @@ class Assembly_KirigamiTruss:
     def Initialize_Assembly(self):
         self.node.current_U_mat = np.zeros_like(self.node.coordinates_mat, dtype=float)
         self.node.current_ext_force_mat = np.zeros_like(self.node.coordinates_mat, dtype=float)
-
-        for element in (self.rot_spr_4N, self.cst, self.bar, self.rot_spr_3N):
+        for element in (self.cst, self.bar, self.rot_spr_4N):
             if element is not None:
                 element.Initialize(self.node)
 
@@ -30,7 +28,7 @@ class Assembly_KirigamiTruss:
         T = np.zeros(3 * node_num, dtype=float)
         K = np.zeros((3 * node_num, 3 * node_num), dtype=float)
 
-        for element in (self.cst, self.bar, self.rot_spr_4N, self.rot_spr_3N):
+        for element in (self.cst, self.bar, self.rot_spr_4N):
             if element is not None:
                 Te, Ke = element.Solve_FK(self.node, U)
                 T += Te

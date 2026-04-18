@@ -7,4 +7,4 @@ Total bar weight: 76224.18 N
 Deck weight: 21952.00 N
 Maximum stress ratio: 0.201
 Tip deflection: 0.022204 m
-Execution time: 0.26 s
+Execution time: 0.13 s
