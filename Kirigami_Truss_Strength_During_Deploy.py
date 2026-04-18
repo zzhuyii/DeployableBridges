@@ -64,7 +64,7 @@ def write_summary(name, lines):
     print(f"Saved: {path}")
 
 
-def kirigami_deploy(L = 2.0, N = 8, dep_rate = 0.3, barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6, Fy = 345e6, Fu = 427e6,  Rp = 1.0):
+def kirigami_deploy(L, N, dep_rate = 0.3, barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6, Fy = 345e6, Fu = 427e6,  Rp = 1.0):
     start = time.time()
     An = barA * 0.9   
     r_val = np.sqrt(Ix / barA)
