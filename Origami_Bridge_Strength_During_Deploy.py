@@ -85,9 +85,11 @@ def _parse_mat_matrix(payload, variable_name):
     return values.reshape(dims, order="F").copy()
 
 
-def deployment_offset(node_count, dep_rate):
+def deployment_offset(node_count, dep_rate, N):
     npy_path = os.path.join("OrigamiUhis.npy")
     Uhis = np.load(npy_path)
+    Uhis = Uhis[:,0:(N*9+4),:]
+    
 
     if Uhis.shape[1:] != (node_count, 3):
         raise ValueError(f"OrigamiUhis shape {Uhis.shape} does not match node_count={node_count}")
@@ -127,7 +129,7 @@ def origami_deploy(L,N,dep_rate,barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6,
         L=L, W=2*L, H=L, N=N, barA=barA, barE=barE,
         panel_E=2.0e8, panel_t=0.01, panel_v=0.3, rotK=1.0e8,
     )
-    offset, dep_step, dep_steps = deployment_offset(node.coordinates_mat.shape[0], dep_rate)
+    offset, dep_step, dep_steps = deployment_offset(node.coordinates_mat.shape[0], dep_rate , N)
     node.coordinates_mat = node.coordinates_mat + offset
     assembly.Initialize_Assembly()
     L_total, W_bar = bar_length_and_weight(node, bar)
