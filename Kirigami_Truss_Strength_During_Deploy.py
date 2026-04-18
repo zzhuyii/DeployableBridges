@@ -75,7 +75,7 @@ def kirigami_deploy(L, N, dep_rate = 0.3, barA = 0.00415, barE = 2.0e11, Ix = 7.
     print(f"  lambda_r = {lambda_r:.2f}")
 
     assembly, node, bar, cst, rot_spr_4N, rot_spr_3N, plots = build_kirigami_truss(
-        L=L, gap=0.0, N=N, barA=barA, barE=barE,
+        L=L, N=N, barA=barA, barE=barE,
         panel_E=2.0e8, panel_t=0.01, panel_v=0.3,
         rot4K=1.0e7, rot3K=1.0e8,
     )
