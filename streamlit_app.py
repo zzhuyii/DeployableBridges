@@ -36,9 +36,7 @@ else:
          "Select a number for sections:",
          [2,4,6,8])
 
-L = st.selectbox(
-     "Length of the sections (m):",
-     [1.0,1.5,2.0,2.5,3.0])
+L = 2.0
 
 st.subheader("Strength during deployment")
 

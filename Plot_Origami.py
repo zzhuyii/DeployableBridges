@@ -277,7 +277,7 @@ class Plot_Origami:
         cstIJK = assembly.cst.node_ijk_mat
         for k in range(cstIJK.shape[0]):
             nodeNumVec = cstIJK[k]
-            v = [node0[nn - 1] for nn in nodeNumVec]
+            v = [deformedNode[nn - 1] for nn in nodeNumVec]
             patch = Poly3DCollection([v], facecolors='yellow', linewidths=0, edgecolors='k', alpha=0.5)
             ax.add_collection3d(patch)
 
