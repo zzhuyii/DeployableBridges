@@ -104,8 +104,8 @@ def kirigami_fail(L, N, barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6, Fy = 345e6,
     plots.view_angle1=10
     plots.view_angle2=-75 
     
-    plots.height=5
-    plots.width=10
+    plots.height=10
+    plots.width=30
 
     truss_stress = truss_strain * bar.E_vec
     # save_figure(plots.Plot_Shape_Bar_Stress(truss_stress, U_end), "Kirigami_Truss_Load_To_Fail_Bar_Stress.png")
