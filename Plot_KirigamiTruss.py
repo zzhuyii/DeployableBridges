@@ -391,7 +391,8 @@ class Plot_KirigamiTruss:
         ]
         
         ax.legend(handles=legend_patches, loc='upper left', bbox_to_anchor=(0, 1))           
-        plt.gca().set_aspect('equal')       
+        plt.gca().set_aspect('equal')    
+        fig.update_layout(self.width, self.height)
         plt.show()
         return fig
 
@@ -569,5 +570,6 @@ class Plot_KirigamiTruss:
 
         ax.view_init(view1, view2)
         plt.gca().set_aspect('equal')
+        fig.update_layout(self.width, self.height)
         plt.show()
         return fig
