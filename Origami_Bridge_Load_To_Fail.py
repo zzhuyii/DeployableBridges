@@ -53,7 +53,7 @@ def write_summary(name, lines):
     print(f"Saved: {path}")
 
 
-def origami_fail(L = 2.0, W = 4.0, H = 2.0, N = 4, barA = 0.00415,
+def origami_fail(L, N, barA = 0.00415,
     barE = 2.0e11, Ix = 7.16e-6, Fy = 345e6, Fu = 427e6, Rp = 1.0):
 
     An = barA * 0.9
@@ -64,7 +64,7 @@ def origami_fail(L = 2.0, W = 4.0, H = 2.0, N = 4, barA = 0.00415,
     print("  Section is non-slender (local buckling OK)" if local_ok else "  WARNING: Section fails local buckling slenderness limit")
 
     assembly, node, bar, cst, rot_spr_4N, plots = build_origami_bridge(
-        L=L, W=W, H=H, N=N, barA=barA, barE=barE,
+        L=L, W=2*L, H=2*L, N=N, barA=barA, barE=barE,
         panel_E=2.0e8, panel_t=0.01, panel_v=0.3, rotK=1.0e8,
     )
     assembly.Initialize_Assembly()
