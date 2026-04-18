@@ -11,6 +11,8 @@ from Solver_NR_Loading import Solver_NR_Loading
 from Kirigami_Truss_Strength_During_Deploy import kirigami_deploy
 from Kirigami_Truss_Load_To_Fail import kirigami_fail
 
+from Origami_Bridge_Strength_During_Deploy import origami_deploy
+
 
 st.subheader("Simulation of of deployable bridge")
 
