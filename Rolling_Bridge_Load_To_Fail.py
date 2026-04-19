@@ -109,8 +109,8 @@ def rolling_fail(N):
     plots.view_angle2=-75
     
     truss_stress = truss_strain * bar.E_vec
-    save_figure(plots.Plot_Shape_Bar_Stress(truss_stress,U_end), "Rolling_Bridge_Load_To_Fail_Bar_Stress.png")
-    save_figure(plots.Plot_Shape_Bar_Failure(pass_yn,U_end), "Rolling_Bridge_Load_To_Fail_Bar_Failure.png")
+    # save_figure(plots.Plot_Shape_Bar_Stress(truss_stress,U_end), "Rolling_Bridge_Load_To_Fail_Bar_Stress.png")
+    # save_figure(plots.Plot_Shape_Bar_Failure(pass_yn,U_end), "Rolling_Bridge_Load_To_Fail_Bar_Failure.png")
     
     fig1=plots.Plot_Shape_Bar_Stress(truss_stress,U_end)
     fig2=plots.Plot_Shape_Bar_Failure(pass_yn,U_end)
