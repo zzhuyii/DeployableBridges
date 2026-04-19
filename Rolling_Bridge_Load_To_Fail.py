@@ -76,7 +76,7 @@ def rolling_fail(N):
     nr.assembly = assembly
     node_num = node.coordinates_mat.shape[0]
     nr.supp = np.column_stack([np.arange(node_num), np.zeros(node_num), np.zeros(node_num), np.zeros(node_num)])
-    for support_node in [1, 4, 45, 47]:
+    for support_node in [1, 4, N*6-3, N*6-1]:
         nr.supp[support_node - 1, 1:4] = 1
 
     force = 20000.0
