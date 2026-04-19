@@ -46,7 +46,14 @@ def check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp, K_eff=1.0):
     return truss_strain, internal_force, pass_yn, dcr
 
 
-def kirigami_fail(L, N, barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6, Fy = 345e6, Fu = 427e6, Rp = 1.0):
+def kirigami_fail(L, N ):
+    
+    barA = 0.00415
+    barE = 2.0e11
+    Ix = 7.16e-6
+    Fy = 345e6
+    Fu = 427e6
+    Rp = 1.0
 
     An = barA * 0.9  
     r_val = np.sqrt(Ix / barA)
@@ -104,8 +111,8 @@ def kirigami_fail(L, N, barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6, Fy = 345e6,
     plots.view_angle1=10
     plots.view_angle2=-75 
     
-    plots.height=400
-    plots.width=800
+    plots.height=4
+    plots.width=8
 
     truss_stress = truss_strain * bar.E_vec
     # save_figure(plots.Plot_Shape_Bar_Stress(truss_stress, U_end), "Kirigami_Truss_Load_To_Fail_Bar_Stress.png")
