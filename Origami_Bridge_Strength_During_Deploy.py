@@ -64,9 +64,9 @@ def origami_deploy(L,N,dep_rate):
     barE = 2.0e11
     Ix = 7.16e-6
     
-    Fy = 345e6
-    Fu = 427e6
-    Rp = 1.0,
+    Fy = 345.0e6
+    Fu = 427.0e6
+    Rp = 1.0
     
     An = barA * 0.9
     r_val = np.sqrt(Ix / barA)
