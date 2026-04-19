@@ -30,15 +30,11 @@ def check_members(model, U_end, An, r_val, Fy, Fu, Rp):
     return truss_strain, pass_yn, dcr
 
 
-def main():
-    
-    N=4
+def scissor_fail(secNum):
 
-    model = build_scissor_model(variant="standard", analysis="load", N=4)
+    model = build_scissor_model(variant="standard", analysis="load", N=secNum)
     model.assembly.Initialize_Assembly()
     
-
-
     Fy = 345e6
     Fu = 427e6
     E = model.settings["barE"]
@@ -60,7 +56,7 @@ def main():
     nr.supp = load_supports(model.settings["N"], model.settings["stride"])
     nr.verbose = False
 
-    force = 5000.0
+    force = 10000.0
     history = []
     Uhis = U_end = truss_strain = pass_yn = dcr = None
     total_F = 0.0
@@ -110,5 +106,7 @@ def main():
     save_figure(model.plots.Plot_Shape_Bar_Stress(truss_stress,U_end), os.path.join(OUT_DIR, "Scissor_Bridge_Load_To_Fail_Bar_Stress.png"))
     save_figure(model.plots.Plot_Shape_Bar_Failure(pass_yn,U_end), os.path.join(OUT_DIR, "Scissor_Bridge_Load_To_Fail_Bar_Failure.png"))
 
-if __name__ == "__main__":
-    main()
+    fig1=model.plots.Plot_Shape_Bar_Stress(truss_stress,U_end)
+    fig2=model.plots.Plot_Shape_Bar_Failure(pass_yn,U_end)
+    
+    return fig1,fig2

@@ -1,13 +1,9 @@
 import os
 from dataclasses import dataclass
-
 import matplotlib
-
 matplotlib.use("Agg")
-
 import matplotlib.pyplot as plt
 import numpy as np
-
 from Assembly_Scissor_Bridge import Assembly_Scissor_Bridge
 from CD_Elements_RotSprings_3N import CD_Elements_RotSprings_3N
 from Elements_Nodes import Elements_Nodes

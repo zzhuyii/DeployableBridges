@@ -1,6 +1,4 @@
 import os
-import time
-
 import numpy as np
 
 from Solver_NR_Loading import Solver_NR_Loading
@@ -52,18 +50,10 @@ def check_members(model, U_end, An, r_val, Fy, Fu, Rp):
     return truss_strain, pass_yn, dcr
 
 
-def write_summary(name, lines):
-    path = os.path.join(OUT_DIR, name)
-    with open(path, "w", encoding="utf-8") as f:
-        f.write("\n".join(lines) + "\n")
-    print(f"Saved: {path}")
-
-
-def main():
-    start = time.time()
+def scissor_deploy(secNum,dep_rate):
     dep_rate = 0.5
 
-    model = build_scissor_model(variant="standard", analysis="load", N=8)
+    model = build_scissor_model(variant="standard", analysis="load", N=secNum)
     dL = set_standard_deployment_coordinates(model, dep_rate)
     model.assembly.Initialize_Assembly()
 
@@ -122,6 +112,8 @@ def main():
     save_figure(model.plots.Plot_Shape_Bar_Stress(truss_stress,U_end), os.path.join(OUT_DIR, "Scissor_Bridge_Strength_During_Deploy_Bar_Stress.png"))
     save_figure(model.plots.Plot_Shape_Bar_Failure(pass_yn,U_end), os.path.join(OUT_DIR, "Scissor_Bridge_Strength_During_Deploy_Bar_Failure.png"))
 
+    fig1=model.plots.Plot_Shape_Bar_Stress(truss_stress,U_end)
+    fig2=model.plots.Plot_Shape_Bar_Failure(pass_yn,U_end)
+    
+    return fig1, fig2
 
-if __name__ == "__main__":
-    main()
