@@ -1,7 +1,4 @@
 import os
-import time
-import zlib
-
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -30,59 +27,6 @@ def bar_length_and_weight(node, bar, rho_steel=7850.0, g=9.81):
         total_length += length
         total_weight += length * bar.A_vec[idx] * rho_steel * g
     return total_length, total_weight
-
-
-def _read_mat_tag(data, offset):
-    raw = data[offset:offset + 8]
-    tag0 = int.from_bytes(raw[:4], "little")
-    tag1 = int.from_bytes(raw[4:], "little")
-    small_type = tag0 & 0xFFFF
-    small_nbytes = tag0 >> 16
-    if small_nbytes:
-        payload = raw[4:4 + small_nbytes]
-        return small_type, small_nbytes, payload, offset + 8
-    nbytes = tag1
-    start = offset + 8
-    end = start + nbytes
-    next_offset = end + ((8 - nbytes % 8) % 8)
-    return tag0, nbytes, data[start:end], next_offset
-
-
-def _read_mat_v5_array(path, variable_name):
-    with open(path, "rb") as f:
-        data = f.read()
-    offset = 128
-    while offset < len(data):
-        data_type, _, payload, offset = _read_mat_tag(data, offset)
-        if data_type == 15:  # miCOMPRESSED
-            inner = zlib.decompress(payload)
-            inner_type, _, matrix_payload, _ = _read_mat_tag(inner, 0)
-            if inner_type != 14:
-                continue
-            result = _parse_mat_matrix(matrix_payload, variable_name)
-            if result is not None:
-                return result
-        elif data_type == 14:  # miMATRIX
-            result = _parse_mat_matrix(payload, variable_name)
-            if result is not None:
-                return result
-    raise KeyError(f"Variable {variable_name!r} not found in {path}")
-
-
-def _parse_mat_matrix(payload, variable_name):
-    offset = 0
-    _, _, _, offset = _read_mat_tag(payload, offset)  # array flags
-    _, _, dim_payload, offset = _read_mat_tag(payload, offset)
-    dims = tuple(np.frombuffer(dim_payload, dtype="<i4").astype(int))
-    _, _, name_payload, offset = _read_mat_tag(payload, offset)
-    name = name_payload.decode("latin1")
-    data_type, _, real_payload, offset = _read_mat_tag(payload, offset)
-    if name != variable_name:
-        return None
-    if data_type != 9:
-        raise TypeError(f"Expected miDOUBLE for {variable_name!r}, got type {data_type}")
-    values = np.frombuffer(real_payload, dtype="<f8")
-    return values.reshape(dims, order="F").copy()
 
 
 def deployment_offset(node_count, dep_rate, N):
@@ -114,8 +58,15 @@ def check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp):
     return truss_strain, pass_yn, dcr
 
 
-def origami_deploy(L,N,dep_rate,barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6,
-                   Fy = 345e6, Fu = 427e6, Rp = 1.0,):
+def origami_deploy(L,N,dep_rate):
+    
+    barA = 0.00415
+    barE = 2.0e11
+    Ix = 7.16e-6
+    
+    Fy = 345e6
+    Fu = 427e6
+    Rp = 1.0,
     
     An = barA * 0.9
     r_val = np.sqrt(Ix / barA)
@@ -143,7 +94,6 @@ def origami_deploy(L,N,dep_rate,barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6,
     history = []
     Uhis = U_end = truss_strain = pass_yn = dcr = None
     total_F = 0.0
-    final_step = 5
 
     for step in range(1, 6):
         force = (W_bar + W_deck) / node_num / 5.0 * step
@@ -161,7 +111,6 @@ def origami_deploy(L,N,dep_rate,barA = 0.00415, barE = 2.0e11, Ix = 7.16e-6,
         history.append([step, total_F, float(np.nanmax(dcr)), 1.0 if safe else 0.0])
         print(f"Step {step:2d} : {'All Truss Members Safe' if safe else 'Member Failure Detected'} (AASHTO LRFD)")
         if not safe:
-            final_step = step
             break
 
     plots.viewAngle1=10

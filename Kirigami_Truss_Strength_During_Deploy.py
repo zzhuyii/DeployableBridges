@@ -1,6 +1,4 @@
 import os
-import time
-
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -57,13 +55,6 @@ def check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp):
         pass_yn[j] = passed
         dcr[j] = dcr_j
     return truss_strain, pass_yn, dcr
-
-
-def write_summary(name, lines):
-    path = os.path.join(OUT_DIR, name)
-    with open(path, "w", encoding="utf-8") as f:
-        f.write("\n".join(lines) + "\n")
-    print(f"Saved: {path}")
 
 
 def kirigami_deploy(L, N, dep_rate):

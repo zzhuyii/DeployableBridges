@@ -1,6 +1,4 @@
 import os
-import time
-
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -46,15 +44,14 @@ def check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp):
     return truss_strain, pass_yn, dcr
 
 
-def write_summary(name, lines):
-    path = os.path.join(OUT_DIR, name)
-    with open(path, "w", encoding="utf-8") as f:
-        f.write("\n".join(lines) + "\n")
-    print(f"Saved: {path}")
-
-
-def origami_fail(L, N, barA = 0.00415,
-    barE = 2.0e11, Ix = 7.16e-6, Fy = 345e6, Fu = 427e6, Rp = 1.0):
+def origami_fail(L, N ):
+    
+    barA = 0.00415
+    barE = 2.0e11
+    Ix = 7.16e-6
+    Fy = 345e6
+    Fu = 427e6
+    Rp = 1.0
 
     An = barA * 0.9
     r_val = np.sqrt(Ix / barA)
@@ -83,7 +80,6 @@ def origami_fail(L, N, barA = 0.00415,
     history = []
     Uhis = U_end = truss_strain = pass_yn = dcr = None
     total_F = 0.0
-    failed_step = 100
 
     for step in range(1, 101):
         loads = []
@@ -106,7 +102,6 @@ def origami_fail(L, N, barA = 0.00415,
         history.append([step, total_F, float(np.nanmax(dcr)), 1.0 if safe else 0.0])
         print(f"Step {step:2d} : {'All Truss Members Safe' if safe else 'Member Failure Detected'} (AASHTO LRFD)")
         if not safe:
-            failed_step = step
             break
 
     plots.viewAngle1=10
