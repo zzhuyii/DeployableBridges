@@ -1,5 +1,5 @@
 import os
-
+from matplotlib.patches import Patch
 import imageio.v2 as imageio
 import matplotlib
 
@@ -73,7 +73,7 @@ class Plot_Scissor_Bridge:
         spr = getattr(self.assembly, "rot_spr_4N", None)
         return None if spr is None else spr.node_ijkl_mat
 
-    def _plot_cst_faces(self, ax, nodes_xyz, facecolor="yellow", alpha=1.0, edgecolor="k", linewidth=0.8):
+    def _plot_cst_faces(self, ax, nodes_xyz, facecolor="yellow", alpha=0.5, edgecolor="k", linewidth=0):
         cst = self._cst()
         if cst is None:
             return
@@ -98,145 +98,68 @@ class Plot_Scissor_Bridge:
             ax.plot([p1[0], p2[0]], [p1[1], p2[1]], [p1[2], p2[2]],
                     color=color, linewidth=linewidth)
 
-    def Plot_Shape_Node_Number(self):
+
+    def Plot_Shape_Bar_Stress(self, bar_stress, U):
+        
         node0 = self.assembly.node.coordinates_mat
-        fig, ax = self._setup_ax()
-        self._plot_cst_faces(ax, node0)
-        self._plot_lines(ax, node0, self._bar(), color="k")
-        self._plot_lines(ax, node0, self._act_bar(), color="tab:blue", linewidth=1.2)
-        for i, xyz in enumerate(node0):
-            ax.text(xyz[0], xyz[1], xyz[2], str(i + 1), color="red", fontsize=7)
-        return fig
-
-    def Plot_Shape_CST_Number(self):
-        node0 = self.assembly.node.coordinates_mat
-        fig, ax = self._setup_ax()
-        self._plot_cst_faces(ax, node0)
-        self._plot_lines(ax, node0, self._bar(), color="0.25")
-        cst = np.asarray(self._cst())
-        for i, tri in enumerate(cst):
-            xyz = node0[[self._to0(n) for n in tri]].mean(axis=0)
-            ax.text(xyz[0], xyz[1], xyz[2], str(i + 1), color="blue", fontsize=7)
-        return fig
-
-    def Plot_Shape_Bar_Number(self):
-        node0 = self.assembly.node.coordinates_mat
-        fig, ax = self._setup_ax()
-        self._plot_cst_faces(ax, node0)
-        self._plot_lines(ax, node0, self._bar(), color="k")
-        for i, (n1, n2) in enumerate(np.asarray(self._bar())):
-            mid = 0.5 * (node0[self._to0(n1)] + node0[self._to0(n2)])
-            ax.text(mid[0], mid[1], mid[2], str(i + 1), color="blue", fontsize=7)
-        return fig
-
-    def Plot_Shape_ActBar_Number(self):
-        node0 = self.assembly.node.coordinates_mat
-        fig, ax = self._setup_ax()
-        self._plot_cst_faces(ax, node0)
-        self._plot_lines(ax, node0, self._bar(), color="0.35")
-        self._plot_lines(ax, node0, self._act_bar(), color="tab:blue", linewidth=2.0)
-        for i, (n1, n2) in enumerate(np.asarray(self._act_bar())):
-            mid = 0.5 * (node0[self._to0(n1)] + node0[self._to0(n2)])
-            ax.text(mid[0], mid[1], mid[2], str(i + 1), color="tab:blue", fontsize=7)
-        return fig
-
-    def Plot_Shape_RotSpr_3N_Number(self):
-        node0 = self.assembly.node.coordinates_mat
-        fig, ax = self._setup_ax()
-        self._plot_cst_faces(ax, node0)
-        self._plot_lines(ax, node0, self._bar(), color="k")
-        for i, (_, n2, _) in enumerate(np.asarray(self._rot3())):
-            p = node0[self._to0(n2)]
-            ax.text(p[0], p[1], p[2], str(i + 1), color="blue", fontsize=7)
-        return fig
-
-    def Plot_Shape_RotSpr_4N_Number(self):
-        node0 = self.assembly.node.coordinates_mat
-        fig, ax = self._setup_ax()
-        self._plot_cst_faces(ax, node0)
-        self._plot_lines(ax, node0, self._bar(), color="k")
-        for i, (_, n2, n3, _) in enumerate(np.asarray(self._rot4())):
-            mid = 0.5 * (node0[self._to0(n2)] + node0[self._to0(n3)])
-            ax.text(mid[0], mid[1], mid[2], str(i + 1), color="blue", fontsize=7)
-        return fig
-
-    def Plot_Deformed_Shape(self, U):
-        node0 = self.assembly.node.coordinates_mat
-        deform_node = node0 + np.asarray(U, dtype=float)
-        fig, ax = self._setup_ax()
-        self._plot_cst_faces(ax, node0, facecolor="black", alpha=0.18)
-        self._plot_lines(ax, node0, self._bar(), color="0.65", linewidth=0.8)
-        self._plot_lines(ax, node0, self._act_bar(), color="0.65", linewidth=0.8)
-        self._plot_lines(ax, deform_node, self._bar(), color="k", linewidth=1.1)
-        self._plot_lines(ax, deform_node, self._act_bar(), color="tab:blue", linewidth=1.8)
-        self._plot_cst_faces(ax, deform_node, facecolor="yellow", alpha=0.92)
-        return fig
-
-    def Plot_Deformed_His(self, Uhis):
-        node0 = self.assembly.node.coordinates_mat
-        Uhis = np.asarray(Uhis, dtype=float)
-        if Uhis.ndim != 3 or Uhis.shape[2] != 3:
-            raise ValueError(f"Uhis must be (steps, nodes, 3), got {Uhis.shape}")
-
-        out_path = os.path.abspath(self.fileName)
-        os.makedirs(os.path.dirname(out_path), exist_ok=True)
-
-        fig = plt.figure(figsize=(self.width / self._sizeFactor, self.height / self._sizeFactor))
-        ax = fig.add_subplot(111, projection="3d")
-        images = []
-        for U in Uhis:
-            ax.clear()
-            ax.view_init(self.viewAngle1, self.viewAngle2)
-            ax.set_facecolor("white")
-            ax.set_box_aspect([1, 1, 1])
-            self._set_axis_limits(ax)
-            deform_node = node0 + U
-            self._plot_lines(ax, deform_node, self._bar(), color="k", linewidth=1.0)
-            self._plot_lines(ax, deform_node, self._act_bar(), color="tab:blue", linewidth=1.8)
-            self._plot_cst_faces(ax, deform_node, facecolor="yellow", alpha=0.92)
-            fig.canvas.draw()
-            images.append(np.asarray(fig.canvas.buffer_rgba())[:, :, :3].copy())
-        plt.close(fig)
-        imageio.mimsave(out_path, images, duration=float(self.holdTime))
-        print(f"[Plot_Deformed_His] GIF saved to: {out_path}")
-
-    def Plot_Bar_Force(self, F):
-        node0 = self.assembly.node.coordinates_mat
-        F = np.asarray(F).reshape(-1)
-        fig, ax = self._setup_ax()
-        self._plot_lines(ax, node0, self._bar(), color="k")
-        for i, (n1, n2) in enumerate(np.asarray(self._bar())):
-            mid = 0.5 * (node0[self._to0(n1)] + node0[self._to0(n2)])
-            ax.text(mid[0], mid[1], mid[2], f"{F[i]:.0f}", color="blue", fontsize=7)
-        return fig
-
-    def Plot_Shape_Bar_Stress(self, bar_stress):
-        node0 = self.assembly.node.coordinates_mat
+        deformNode = node0 + U  # U is (N,3) numpy array
+        bar_connect = self.assembly.bar.node_ij_mat
+        
         bar_stress = np.asarray(bar_stress, dtype=float).reshape(-1)
         fig, ax = self._setup_ax()
-        self._plot_cst_faces(ax, node0, facecolor="yellow", alpha=0.75)
+        self._plot_cst_faces(ax, deformNode, facecolor="yellow", alpha=0.5)
         vmin = float(np.min(bar_stress))
         vmax = float(np.max(bar_stress))
         span = max(vmax - vmin, 1e-12)
         cmap = plt.get_cmap("coolwarm")
         for stress, (n1, n2) in zip(bar_stress, np.asarray(self._bar())):
             color = cmap((stress - vmin) / span)
-            p1 = node0[self._to0(n1)]
-            p2 = node0[self._to0(n2)]
+            p1 = deformNode[self._to0(n1)]
+            p2 = deformNode[self._to0(n2)]
             ax.plot([p1[0], p2[0]], [p1[1], p2[1]], [p1[2], p2[2]], color=color, linewidth=2.0)
-        sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=vmin / 1e6, vmax=vmax / 1e6))
-        sm.set_array([])
-        fig.colorbar(sm, ax=ax, shrink=0.65, label="Bar stress (MPa)")
+            
+        min_sx = float(np.min(bar_stress))
+        max_sx = float(np.max(bar_stress))
+        span = max(max_sx - min_sx, 1.0)
+
+        for stress, (n1, n2) in zip(bar_stress, bar_connect):
+            if stress > 4 / 5 * span + min_sx:
+                color = 'red'
+            elif stress > 3 / 5 * span + min_sx:
+                color = 'orange'
+            elif stress > 2 / 5 * span + min_sx:
+                color = 'yellow'
+            elif stress > 1 / 5 * span + min_sx:
+                color = 'green'
+            else:
+                color = 'blue'
+            p1 = deformNode[n1 - 1]
+            p2 = deformNode[n2 - 1]
+            ax.plot([p1[0], p2[0]], [p1[1], p2[1]], [p1[2], p2[2]],
+                    color=color, linewidth=2)
+
+        legend_patches = [
+            Patch(color="red", label="{:.1f} to {:.1f} MPa".format((4 / 5 * span + min_sx) / 1e6, max_sx / 1e6)),
+            Patch(color="orange", label="{:.1f} to {:.1f} MPa".format((3 / 5 * span + min_sx) / 1e6, (4 / 5 * span + min_sx) / 1e6)),
+            Patch(color="yellow", label="{:.1f} to {:.1f} MPa".format((2 / 5 * span + min_sx) / 1e6, (3 / 5 * span + min_sx) / 1e6)),
+            Patch(color="green", label="{:.1f} to {:.1f} MPa".format((1 / 5 * span + min_sx) / 1e6, (2 / 5 * span + min_sx) / 1e6)),
+            Patch(color="blue", label="{:.1f} to {:.1f} MPa".format(min_sx / 1e6, (1 / 5 * span + min_sx) / 1e6)),
+        ]
+        ax.legend(handles=legend_patches, loc='upper left', bbox_to_anchor=(0, 1))    
+        plt.gca().set_aspect('equal')    
+        plt.show()    
         return fig
 
-    def Plot_Shape_Bar_Failure(self, pass_yn):
+    def Plot_Shape_Bar_Failure(self, pass_yn,U_end):
         node0 = self.assembly.node.coordinates_mat
+        deformedNode = node0 + U_end
         pass_yn = np.asarray(pass_yn, dtype=bool).reshape(-1)
         fig, ax = self._setup_ax()
-        self._plot_cst_faces(ax, node0, facecolor="yellow", alpha=0.45)
+        self._plot_cst_faces(ax, deformedNode, facecolor="yellow", alpha=0.45)
         for passed, (n1, n2) in zip(pass_yn, np.asarray(self._bar())):
-            p1 = node0[self._to0(n1)]
-            p2 = node0[self._to0(n2)]
+            p1 = deformedNode[self._to0(n1)]
+            p2 = deformedNode[self._to0(n2)]
             color = "green" if passed else "red"
             ax.plot([p1[0], p2[0]], [p1[1], p2[1]], [p1[2], p2[2]], color=color, linewidth=2.2)
+        plt.gca().set_aspect('equal')  
         return fig

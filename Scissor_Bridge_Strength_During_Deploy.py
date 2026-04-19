@@ -61,7 +61,7 @@ def write_summary(name, lines):
 
 def main():
     start = time.time()
-    dep_rate = 1.0
+    dep_rate = 0.5
 
     model = build_scissor_model(variant="standard", analysis="load", N=8)
     dL = set_standard_deployment_coordinates(model, dep_rate)
@@ -93,7 +93,7 @@ def main():
     history = []
     Uhis = U_end = truss_strain = pass_yn = dcr = None
     total_F = 0.0
-    final_step = 5
+
     for step in range(1, 6):
         force = (W_bar + W_deck) / node_num / 5.0 * step
         nr.load = np.column_stack([np.arange(node_num), np.zeros(node_num), np.zeros(node_num), -force * np.ones(node_num)])
@@ -112,33 +112,15 @@ def main():
         history.append([step, total_F, float(np.nanmax(dcr)), max_moment, moment_capacity, 1.0 if safe else 0.0])
         print(f"Step {step:2d} : {'All checks safe' if safe else 'Failure detected'}")
         if not safe:
-            final_step = step
             break
 
-    Uaverage = -float(np.mean(U_end[[67 - 1, 68 - 1], 2]))
-    np.savetxt(
-        os.path.join(OUT_DIR, "Scissor_Bridge_Strength_During_Deploy_Step_History.csv"),
-        np.asarray(history), delimiter=",",
-        header="step,total_load_N,max_DCR,max_moment_Nm,moment_capacity_Nm,all_checks_safe", comments="",
-    )
-    summary = [
-        "Scissor_Bridge_Strength_During_Deploy",
-        f"Deployment rate: {dep_rate:.3f}",
-        f"dL: {dL:.6f} m",
-        f"Final checked step: {final_step}",
-        f"Total length of all bars: {L_total:.2f} m",
-        f"Total bar weight: {W_bar:.2f} N",
-        f"Deck weight: {W_deck:.2f} N",
-        f"Maximum stress ratio: {np.nanmax(dcr):.3f}",
-        f"Tip deflection: {Uaverage:.6f} m",
-        f"Execution time: {time.time() - start:.2f} s",
-    ]
-    write_summary("Scissor_Bridge_Strength_During_Deploy_Summary.txt", summary)
+
+    model.plots.viewAngle1=10
+    model.plots.viewAngle2=-75 
 
     truss_stress = truss_strain * model.bar.E_vec
-    save_figure(model.plots.Plot_Shape_Bar_Stress(truss_stress), os.path.join(OUT_DIR, "Scissor_Bridge_Strength_During_Deploy_Bar_Stress.png"))
-    save_figure(model.plots.Plot_Shape_Bar_Failure(pass_yn), os.path.join(OUT_DIR, "Scissor_Bridge_Strength_During_Deploy_Bar_Failure.png"))
-    save_figure(model.plots.Plot_Deformed_Shape(U_end), os.path.join(OUT_DIR, "Scissor_Bridge_Strength_During_Deploy_Deformed.png"))
+    save_figure(model.plots.Plot_Shape_Bar_Stress(truss_stress,U_end), os.path.join(OUT_DIR, "Scissor_Bridge_Strength_During_Deploy_Bar_Stress.png"))
+    save_figure(model.plots.Plot_Shape_Bar_Failure(pass_yn,U_end), os.path.join(OUT_DIR, "Scissor_Bridge_Strength_During_Deploy_Bar_Failure.png"))
 
 
 if __name__ == "__main__":
