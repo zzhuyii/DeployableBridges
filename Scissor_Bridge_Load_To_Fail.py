@@ -56,7 +56,7 @@ def scissor_fail(secNum):
     nr.supp = load_supports(model.settings["N"], model.settings["stride"])
     nr.verbose = False
 
-    force = 10000.0
+    force = 40000.0
     history = []
     Uhis = U_end = truss_strain = pass_yn = dcr = None
     total_F = 0.0
