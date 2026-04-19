@@ -44,18 +44,18 @@ DepRate = st.selectbox(
      [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0])
 
 
-# if BridgeType=='kirigami':        
-#     fig1,fig2=kirigami_deploy(L, N, DepRate)    
-#     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
-#     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
-#     st.pyplot(fig1)
-#     st.pyplot(fig2)
-# elif BridgeType=='origami':   
-#     fig1,fig2=origami_deploy(L, N, DepRate)    
-#     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
-#     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
-#     st.pyplot(fig1)
-#     st.pyplot(fig2)
+if BridgeType=='kirigami':        
+    fig1,fig2=kirigami_deploy(L, N, DepRate)    
+    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
+    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
+    st.pyplot(fig1)
+    st.pyplot(fig2)
+elif BridgeType=='origami':   
+    fig1,fig2=origami_deploy(L, N, DepRate)    
+    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
+    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
+    st.pyplot(fig1)
+    st.pyplot(fig2)
 
 
 st.subheader("Load to failure after deployment")
@@ -67,18 +67,18 @@ st.text('Here we load the bridge all the way to failure. We will study' +
         'iterative nonlinear loading solver is used, finding ultimate ' +
         'load can be slower.')
 
-# if BridgeType=='kirigami':        
-#     fig1,fig2=kirigami_fail(L, N)    
-#     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
-#     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
-#     st.pyplot(fig1)
-#     st.pyplot(fig2)
-# elif BridgeType=='origami':   
-#     fig1,fig2=origami_fail(L, N)    
-#     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
-#     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
-#     st.pyplot(fig1)
-#     st.pyplot(fig2)
+if BridgeType=='kirigami':        
+    fig1,fig2=kirigami_fail(L, N)    
+    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
+    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
+    st.pyplot(fig1)
+    st.pyplot(fig2)
+elif BridgeType=='origami':   
+    fig1,fig2=origami_fail(L, N)    
+    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
+    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
+    st.pyplot(fig1)
+    st.pyplot(fig2)
 
 
 
