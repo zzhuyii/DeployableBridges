@@ -9,6 +9,9 @@ from Origami_Bridge_Load_To_Fail import origami_fail
 from Scissor_Bridge_Strength_During_Deploy import scissor_deploy
 from Scissor_Bridge_Load_To_Fail import scissor_fail
 
+from Scissor_Bridge_2_Strength_During_Deploy import improvedScissor_deploy
+from Scissor_Bridge_2_Load_To_Fail import improvedScissor_fail
+
 
 st.subheader("Simulation of of deployable bridge")
 
@@ -65,6 +68,13 @@ elif BridgeType=='scissor':
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
     st.pyplot(fig1)
     st.pyplot(fig2)
+elif BridgeType=='improved scissor':   
+    fig1,fig2=improvedScissor_deploy(N, DepRate)    
+    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
+    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
+    st.pyplot(fig1)
+    st.pyplot(fig2)    
+    
 
 
 st.subheader("Load to failure after deployment")
@@ -94,5 +104,10 @@ elif BridgeType=='scissor':
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
     st.pyplot(fig1)
     st.pyplot(fig2)
-
+elif BridgeType=='improved scissor':   
+    fig1,fig2=improvedScissor_fail(N)    
+    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
+    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
+    st.pyplot(fig1)
+    st.pyplot(fig2)   
 

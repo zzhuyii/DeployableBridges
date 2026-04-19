@@ -1,8 +1,5 @@
 import os
-import time
-
 import numpy as np
-
 from Solver_NR_Loading import Solver_NR_Loading
 from scissor_common import (
     bridge_self_weight,
@@ -31,18 +28,9 @@ def check_members(model, U_end, An, r_val, Fy, Fu, Rp):
         dcr[j] = dcr_j
     return truss_strain, pass_yn, dcr
 
+def improvedScissor_fail(secNum):
 
-def write_summary(name, lines):
-    path = os.path.join(OUT_DIR, name)
-    with open(path, "w", encoding="utf-8") as f:
-        f.write("\n".join(lines) + "\n")
-    print(f"Saved: {path}")
-
-
-def main():
-    start = time.time()
-
-    model = build_scissor_model(variant="improved", analysis="load", N=8)
+    model = build_scissor_model(variant="improved", analysis="load", N=secNum)
     model.assembly.Initialize_Assembly()
 
     Fy = 345e6
@@ -66,7 +54,7 @@ def main():
     nr.supp = load_supports(model.settings["N"], model.settings["stride"])
     nr.verbose = False
 
-    force = 2500.0
+    force = 20000.0
     history = []
     Uhis = U_end = truss_strain = pass_yn = dcr = None
     total_F = 0.0
@@ -114,36 +102,15 @@ def main():
             failure_reason = "Scissor bending moment failure"
             break
 
-    mid_nodes = [5 * model.settings["N"] + 1 - 1, 5 * model.settings["N"] + 2 - 1]
-    Uaverage = -float(np.mean(U_end[mid_nodes, 2]))
-    Kstiff = total_F / Uaverage if abs(Uaverage) > 1.0e-12 else np.inf
 
-    np.savetxt(
-        os.path.join(OUT_DIR, "Scissor_Bridge_2_Load_To_Fail_Step_History.csv"),
-        np.asarray(history), delimiter=",",
-        header="step,total_load_N,max_DCR,max_moment_Nm,moment_capacity_Nm,all_checks_safe", comments="",
-    )
-    summary = [
-        "Scissor_Bridge_2_Load_To_Fail",
-        f"Failed or final step: {failed_step}",
-        f"Failure reason: {failure_reason}",
-        f"Total length of all bars: {L_total:.2f} m",
-        f"Total bar weight: {W_bar:.2f} N",
-        f"Failure load: {total_F:.2f} N",
-        f"Mid-span deflection at failure: {Uaverage:.6f} m",
-        f"Stiffness: {Kstiff:.2f} N/m",
-        f"span/disp at failure: {16.0 / Uaverage:.2f}",
-        f"capacity/weight: {total_F / W_bar:.2f}",
-        f"Maximum DCR: {np.nanmax(dcr):.3f}",
-        f"Execution time: {time.time() - start:.2f} s",
-    ]
-    write_summary("Scissor_Bridge_2_Load_To_Fail_Summary.txt", summary)
+    model.plots.viewAngle1=10
+    model.plots.viewAngle2=-75 
 
     truss_stress = truss_strain * model.bar.E_vec
-    save_figure(model.plots.Plot_Shape_Bar_Stress(truss_stress), os.path.join(OUT_DIR, "Scissor_Bridge_2_Load_To_Fail_Bar_Stress.png"))
-    save_figure(model.plots.Plot_Shape_Bar_Failure(pass_yn), os.path.join(OUT_DIR, "Scissor_Bridge_2_Load_To_Fail_Bar_Failure.png"))
-    save_figure(model.plots.Plot_Deformed_Shape(U_end), os.path.join(OUT_DIR, "Scissor_Bridge_2_Load_To_Fail_Deformed.png"))
+    save_figure(model.plots.Plot_Shape_Bar_Stress(truss_stress,U_end), os.path.join(OUT_DIR, "Scissor_Bridge_2_Load_To_Fail_Bar_Stress.png"))
+    save_figure(model.plots.Plot_Shape_Bar_Failure(pass_yn,U_end), os.path.join(OUT_DIR, "Scissor_Bridge_2_Load_To_Fail_Bar_Failure.png"))
 
+    fig1=model.plots.Plot_Shape_Bar_Stress(truss_stress,U_end)
+    fig2=model.plots.Plot_Shape_Bar_Failure(pass_yn,U_end)
 
-if __name__ == "__main__":
-    main()
+    return fig1, fig2
