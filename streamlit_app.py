@@ -12,6 +12,9 @@ from Scissor_Bridge_Load_To_Fail import scissor_fail
 from Scissor_Bridge_2_Strength_During_Deploy import improvedScissor_deploy
 from Scissor_Bridge_2_Load_To_Fail import improvedScissor_fail
 
+from Rolling_Bridge_Strength_During_Deploy import rolling_deploy
+from Rolling_Bridge_Load_To_Fail import rolling_fail
+
 
 st.subheader("Simulation of of deployable bridge")
 
@@ -74,6 +77,12 @@ elif BridgeType=='improved scissor':
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
     st.pyplot(fig1)
     st.pyplot(fig2)    
+elif BridgeType=='rolling':   
+    fig1,fig2=rolling_deploy(N, DepRate)    
+    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
+    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
+    st.pyplot(fig1)
+    st.pyplot(fig2)    
     
 
 
@@ -110,4 +119,11 @@ elif BridgeType=='improved scissor':
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
     st.pyplot(fig1)
     st.pyplot(fig2)   
+elif BridgeType=='rolling':   
+    fig1,fig2=rolling_fail(N)    
+    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
+    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
+    st.pyplot(fig1)
+    st.pyplot(fig2)   
+
 

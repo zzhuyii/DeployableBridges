@@ -1,6 +1,4 @@
 import os
-import time
-
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -46,20 +44,11 @@ def check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp):
     return truss_strain, pass_yn, dcr
 
 
-def write_summary(name, lines):
-    path = os.path.join(OUT_DIR, name)
-    with open(path, "w", encoding="utf-8") as f:
-        f.write("\n".join(lines) + "\n")
-    print(f"Saved: {path}")
-
-
-def main():
-    start = time.time()
-
+def rolling_fail(N):
+    
     H = 2.0
     W = 2.0
     L = 2.0
-    N = 8
     barA = 0.00415
     barE = 2.0e11
     barA_brace = 0.0019
@@ -90,11 +79,10 @@ def main():
     for support_node in [1, 4, 45, 47]:
         nr.supp[support_node - 1, 1:4] = 1
 
-    force = 2000.0
+    force = 20000.0
     history = []
     Uhis = U_end = truss_strain = pass_yn = dcr = None
     total_F = 0.0
-    failed_step = 100
 
     for step in range(1, 101):
         loads = []
@@ -115,37 +103,17 @@ def main():
         history.append([step, total_F, float(np.nanmax(dcr)), 1.0 if safe else 0.0])
         print(f"Step {step:2d} : {'All Truss Members Safe' if safe else 'Member Failure Detected'} (AASHTO LRFD)")
         if not safe:
-            failed_step = step
             break
 
-    mid_nodes = [3 * N - 3 - 1, 3 * N - 1 - 1]
-    Uaverage = -float(np.mean(U_end[mid_nodes, 2]))
-    Kstiff = total_F / Uaverage if abs(Uaverage) > 1.0e-12 else np.inf
-
-    np.savetxt(
-        os.path.join(OUT_DIR, "Rolling_Bridge_Load_To_Fail_Step_History.csv"),
-        np.asarray(history), delimiter=",", header="step,total_load_N,max_DCR,all_members_safe", comments="",
-    )
-    summary = [
-        "Rolling_Bridge_Load_To_Fail",
-        f"Failed or final step: {failed_step}",
-        f"Total length of all bars: {L_total:.2f} m",
-        f"Total bar weight: {W_bar:.2f} N",
-        f"Failure load: {total_F:.2f} N",
-        f"Mid-span deflection at failure: {Uaverage:.6f} m",
-        f"Stiffness: {Kstiff:.2f} N/m",
-        f"span/disp at failure: {16.0 / Uaverage:.2f}",
-        f"capacity/weight: {total_F / W_bar:.2f}",
-        f"Maximum DCR: {np.nanmax(dcr):.3f}",
-        f"Execution time: {time.time() - start:.2f} s",
-    ]
-    write_summary("Rolling_Bridge_Load_To_Fail_Summary.txt", summary)
-
+    plots.view_angle1=10
+    plots.view_angle2=-75
+    
     truss_stress = truss_strain * bar.E_vec
-    save_figure(plots.Plot_Shape_Bar_Stress(truss_stress), "Rolling_Bridge_Load_To_Fail_Bar_Stress.png")
-    save_figure(plots.Plot_Shape_Bar_Failure(pass_yn), "Rolling_Bridge_Load_To_Fail_Bar_Failure.png")
-    save_figure(plots.Plot_Deformed_Shape(U_end), "Rolling_Bridge_Load_To_Fail_Deformed.png")
+    save_figure(plots.Plot_Shape_Bar_Stress(truss_stress,U_end), "Rolling_Bridge_Load_To_Fail_Bar_Stress.png")
+    save_figure(plots.Plot_Shape_Bar_Failure(pass_yn,U_end), "Rolling_Bridge_Load_To_Fail_Bar_Failure.png")
+    
+    fig1=plots.Plot_Shape_Bar_Stress(truss_stress,U_end)
+    fig2=plots.Plot_Shape_Bar_Failure(pass_yn,U_end)
+    
+    return fig1, fig2
 
-
-if __name__ == "__main__":
-    main()

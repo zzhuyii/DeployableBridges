@@ -114,8 +114,8 @@ def improvedScissor_deploy(secNum,dep_rate):
     model.plots.viewAngle2=-75 
 
     truss_stress = truss_strain * model.bar.E_vec
-    save_figure(model.plots.Plot_Shape_Bar_Stress(truss_stress,U_end), os.path.join(OUT_DIR, "Scissor_Bridge_2_Strength_During_Deploy_Bar_Stress.png"))
-    save_figure(model.plots.Plot_Shape_Bar_Failure(pass_yn,U_end), os.path.join(OUT_DIR, "Scissor_Bridge_2_Strength_During_Deploy_Bar_Failure.png"))
+    # save_figure(model.plots.Plot_Shape_Bar_Stress(truss_stress,U_end), os.path.join(OUT_DIR, "Scissor_Bridge_2_Strength_During_Deploy_Bar_Stress.png"))
+    # save_figure(model.plots.Plot_Shape_Bar_Failure(pass_yn,U_end), os.path.join(OUT_DIR, "Scissor_Bridge_2_Strength_During_Deploy_Bar_Failure.png"))
 
     fig1=model.plots.Plot_Shape_Bar_Stress(truss_stress,U_end)
     fig2=model.plots.Plot_Shape_Bar_Failure(pass_yn,U_end)

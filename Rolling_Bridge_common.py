@@ -39,8 +39,6 @@ def build_rolling_bridge(
     rotK=1.0e6,
     barA_brace=None,
 ):
-    if N != 8:
-        raise ValueError("Rolling MATLAB source uses N=8; refusing to build a legacy N!=8 model.")
 
     node = Elements_Nodes()
     bar = Vec_Elements_Bars()
