@@ -113,4 +113,4 @@ def improvedScissor_fail(secNum):
     fig1=model.plots.Plot_Shape_Bar_Stress(truss_stress,U_end)
     fig2=model.plots.Plot_Shape_Bar_Failure(pass_yn,U_end)
 
-    return fig1, fig2
+    return fig1, fig2, total_F, W_bar
