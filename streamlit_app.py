@@ -67,15 +67,17 @@ elif BridgeType=='origami':
     st.pyplot(fig1)
     st.pyplot(fig2)
 elif BridgeType=='scissor':   
-    fig1,fig2=scissor_deploy(N, DepRate)    
+    fig1,fig2,tip=scissor_deploy(N, DepRate)    
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
+    st.write("The tip deflection of scissor bridge in meter unit is:", tip)
     st.pyplot(fig1)
     st.pyplot(fig2)
 elif BridgeType=='improved scissor':   
-    fig1,fig2=improvedScissor_deploy(N, DepRate)    
+    fig1,fig2,tip=improvedScissor_deploy(N, DepRate)    
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
-    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
+    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")   
+    st.write("The tip deflection of improved scissor bridge in meter unit is:", tip)
     st.pyplot(fig1)
     st.pyplot(fig2)    
 elif BridgeType=='rolling':   
