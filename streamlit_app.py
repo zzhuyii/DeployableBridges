@@ -103,9 +103,11 @@ st.text('Here we load the bridge all the way to failure. We will study' +
         'load can be slower.')
 
 if BridgeType=='kirigami':        
-    fig1,fig2=kirigami_fail(L, N)    
+    fig1,fig2,F,W=kirigami_fail(L, N)    
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
-    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
+    # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")  
+    st.write("The the maximum load kirigami bridge can carry is:", F/1000, "kN")
+    st.write("The the load over self-weight of kirigami bridge can carry is:", F/W)
     st.pyplot(fig1)
     st.pyplot(fig2)
 elif BridgeType=='origami':   
