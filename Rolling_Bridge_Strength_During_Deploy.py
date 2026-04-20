@@ -136,4 +136,9 @@ def rolling_deploy(N,dep_rate):
     fig1=plots.Plot_Shape_Bar_Stress(truss_stress,U_end)
     fig2=plots.Plot_Shape_Bar_Failure(pass_yn,U_end)
     
-    return fig1, fig2
+    U1=U_end[N*6-3, 2]
+    U2=U_end[N*6-1, 2]
+    
+    tipDeflection=0.5*(U1+U2)
+        
+    return fig1, fig2, tipDeflection
