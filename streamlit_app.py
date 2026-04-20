@@ -25,7 +25,9 @@ st.text('This is a demo for using the Sim-FAST package to simulate the deploymen
         'connections are rigid, all members share the same cross-section, and ' +
         'ignore buckling related failure mode when calculating the loading.' +
         'For more detailed control of the simulation, please find the MATLAB ' +
-        'code from: https://github.com/zzhuyii/Sim-FAST')
+        'code from: ')
+
+st.markdown("[Click here](https://github.com/zzhuyii/Sim-FAST")
 
 st.subheader("Setting up the deployable bridge")
 
