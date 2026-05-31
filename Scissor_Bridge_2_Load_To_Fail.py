@@ -73,15 +73,6 @@ def improvedScissor_fail(secNum,Lb,designCode):
             print(f"Step {step:2d} : All Truss Members Safe (AASHTO LRFD)")
         else:
             print(f"Step {step:2d} : Member Failure Detected (AASHTO LRFD)")
-            failed_step = step
-            failure_reason = "Axial member LRFD failure"
-            break
-        if moment_safe:
-            print(f"Step {step:2d} : Max Moment {max_moment:.2f} < Capacity {moment_capacity:.2f}")
-        else:
-            print(f"Step {step:2d} : Max Moment {max_moment:.2f} > Capacity {moment_capacity:.2f}")
-            failed_step = step
-            failure_reason = "Scissor bending moment failure"
             break
 
 

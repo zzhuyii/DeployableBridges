@@ -38,7 +38,7 @@ def scissor_fail(secNum, Lb, designCode):
     
     nr.verbose = False
 
-    force = 40000.0
+    force = 100000.0
     history = []
     Uhis = U_end = truss_strain = pass_yn = dcr = None
     total_F = 0.0
@@ -74,11 +74,7 @@ def scissor_fail(secNum, Lb, designCode):
         else:
             print(f"Step {step:2d} : Member Failure Detected (AASHTO LRFD)")
             break
-        if moment_safe:
-            print(f"Step {step:2d} : Max Moment {max_moment:.2f} < Capacity {moment_capacity:.2f}")
-        else:
-            print(f"Step {step:2d} : Max Moment {max_moment:.2f} > Capacity {moment_capacity:.2f}")
-            break
+
 
 
     plots.viewAngle1=10
@@ -88,5 +84,8 @@ def scissor_fail(secNum, Lb, designCode):
 
     fig1=plots.Plot_Shape_Bar_Stress(truss_stress,U_end)
     fig2=plots.Plot_Shape_Bar_Failure(pass_yn,U_end)
+    
+    print(pass_yn)
+    print(dcr)
     
     return fig1,fig2, total_F, W_bar
