@@ -11,7 +11,6 @@ from Solver_NR_Loading import Solver_NR_Loading
 
 OUT_DIR = os.path.dirname(os.path.abspath(__file__))
 
-
 def save_figure(fig, name):
     path = os.path.join(OUT_DIR, name)
     fig.savefig(path, dpi=200, bbox_inches="tight")
@@ -44,7 +43,7 @@ def check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp):
     return truss_strain, pass_yn, dcr
 
 
-def origami_fail(L, N ):
+def origami_fail(L, N, designCode):
     
     barA = 0.00415
     barE = 2.0e11
@@ -97,7 +96,7 @@ def origami_fail(L, N ):
         nr.tol = 1.0e-5
         Uhis = nr.Solve()
         U_end = Uhis[-1]
-        truss_strain, pass_yn, dcr = check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp)
+        truss_strain, pass_yn, dcr = check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp, designCode)
         safe = bool(np.all(pass_yn))
         history.append([step, total_F, float(np.nanmax(dcr)), 1.0 if safe else 0.0])
         print(f"Step {step:2d} : {'All Truss Members Safe' if safe else 'Member Failure Detected'} (AASHTO LRFD)")
