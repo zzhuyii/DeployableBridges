@@ -124,7 +124,7 @@ if BridgeType=='kirigami':
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")  
     st.write("The the maximum load kirigami bridge can carry is:", F/1000, "kN")
-    st.write("The the load over self-weight of kirigami bridge can carry is:", {F/Weight:.2f})
+    st.write(f"The the load over self-weight of kirigami bridge can carry is:, {F/Weight:.2f}")
     st.pyplot(fig1)
     st.pyplot(fig2)
 elif BridgeType=='origami':   
@@ -132,7 +132,7 @@ elif BridgeType=='origami':
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")  
     st.write("The the maximum load origami bridge can carry is:", F/1000, "kN")
-    st.write("The the load over self-weight of origami bridge can carry is:", {F/Weight:.2f})
+    st.write(f"The the load over self-weight of origami bridge can carry is:, {F/Weight:.2f}")
     st.pyplot(fig1)
     st.pyplot(fig2)
 elif BridgeType=='scissor':   
@@ -140,7 +140,7 @@ elif BridgeType=='scissor':
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")   
     st.write("The the maximum load scissor bridge can carry is:", F/1000, "kN")
-    st.write("The the load over self-weight of scissor bridge can carry is:", {F/Weight:.2f})
+    st.write(f"The the load over self-weight of scissor bridge can carry is:, {F/Weight:.2f}")
     st.pyplot(fig1)
     st.pyplot(fig2)
 elif BridgeType=='improved scissor':   
@@ -148,7 +148,7 @@ elif BridgeType=='improved scissor':
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
     st.write("The the maximum load improved scissor bridge can carry is:", F/1000, "kN")
-    st.write("The the load over self-weight of improved scissor bridge can carry is:", {F/Weight:.2f})
+    st.write(f"The the load over self-weight of improved scissor bridge can carry is:, {F/Weight:.2f}")
     st.pyplot(fig1)
     st.pyplot(fig2)   
 elif BridgeType=='rolling':   
@@ -156,7 +156,7 @@ elif BridgeType=='rolling':
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png") 
     st.write("The the maximum load rolling bridge can carry is:", F/1000, "kN")
-    st.write("The the load over self-weight of rolling bridge can carry is:", {F/Weight:.2f})
+    st.write(f"The the load over self-weight of rolling bridge can carry is:, {F/Weight:.2f}")
     st.pyplot(fig1)
     st.pyplot(fig2)   
 
