@@ -44,11 +44,10 @@ def check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp):
     return truss_strain, pass_yn, dcr
 
 
-def rolling_fail(N):
+def rolling_fail(N,L):
     
     H = 2.0
     W = 2.0
-    L = 2.0
     barA = 0.00415
     barE = 2.0e11
     barA_brace = 0.0019

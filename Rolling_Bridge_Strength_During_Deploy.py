@@ -66,10 +66,9 @@ def write_summary(name, lines):
     print(f"Saved: {path}")
 
 
-def rolling_deploy(N,dep_rate):
+def rolling_deploy(N,dep_rate,L):
     H = 2.0
     W = 2.0
-    L = 2.0
 
     barA = 0.00415
     barE = 2.0e11
