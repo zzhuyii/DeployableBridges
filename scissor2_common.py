@@ -195,7 +195,7 @@ def build_scissor2_model(N, L=2.0,
 
     plots = Plot_Scissor_Bridge()
     plots.assembly = assembly
-    plots.displayRange = np.array([-1, L*N+1, -1, L+1, -1, L+1], dtype=float)
+    plots.displayRange = np.array([-1, L*N+1, -1, L+1, -1, L+2], dtype=float)
     plots.viewAngle1 = 20
     plots.viewAngle2 = 20
 

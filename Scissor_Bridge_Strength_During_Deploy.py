@@ -30,7 +30,6 @@ def set_standard_deployment_coordinates(node, N, L, dep_rate):
 
 
 def scissor_deploy(secNum, dep_rate, Lb, designCode):
-    dep_rate = 0.5
 
     assembly, node, bar, act_bar, cst, rot3, rot4, plots = build_scissor1_model(N=secNum,L=Lb)
     
