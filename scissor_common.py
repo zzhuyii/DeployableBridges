@@ -300,14 +300,14 @@ def _improved_act_bars(N):
     return rows, act_bar_num_1
 
 
-def build_scissor_model(variant="standard", analysis="deploy", N=None):
+def build_scissor_model(variant="standard", analysis="deploy", N=None, L=2.0):
     improved = variant == "improved"
     load_case = analysis == "load"
     if N is None:
         N = 8
 
-    H = 2.0
-    L = 2.0
+    H = L
+    
     barE = 2.0e11
     panel_E = 2.0e8
     panel_t = 0.01

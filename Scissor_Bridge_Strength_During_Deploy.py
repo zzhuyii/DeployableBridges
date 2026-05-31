@@ -49,10 +49,10 @@ def check_members(model, U_end, An, r_val, Fy, Fu, Rp):
     return truss_strain, pass_yn, dcr
 
 
-def scissor_deploy(secNum,dep_rate):
+def scissor_deploy(secNum,dep_rate,Lb):
     dep_rate = 0.5
 
-    model = build_scissor_model(variant="standard", analysis="load", N=secNum)
+    model = build_scissor_model(variant="standard", analysis="load", N=secNum,L=Lb)
     dL = set_standard_deployment_coordinates(model, dep_rate)
     model.assembly.Initialize_Assembly()
 

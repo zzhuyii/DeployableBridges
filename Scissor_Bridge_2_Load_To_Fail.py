@@ -28,9 +28,9 @@ def check_members(model, U_end, An, r_val, Fy, Fu, Rp):
         dcr[j] = dcr_j
     return truss_strain, pass_yn, dcr
 
-def improvedScissor_fail(secNum):
+def improvedScissor_fail(secNum,Lb):
 
-    model = build_scissor_model(variant="improved", analysis="load", N=secNum)
+    model = build_scissor_model(variant="improved", analysis="load", N=secNum,L=Lb)
     model.assembly.Initialize_Assembly()
 
     Fy = 345e6

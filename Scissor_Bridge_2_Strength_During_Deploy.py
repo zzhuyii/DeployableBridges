@@ -57,9 +57,9 @@ def write_summary(name, lines):
     print(f"Saved: {path}")
 
 
-def improvedScissor_deploy(secNum,dep_rate):
+def improvedScissor_deploy(secNum,dep_rate,Lb):
 
-    model = build_scissor_model(variant="improved", analysis="load", N=secNum)
+    model = build_scissor_model(variant="improved", analysis="load", N=secNum, L=Lb)
     dL = set_improved_deployment_coordinates(model, dep_rate)
     model.assembly.Initialize_Assembly()
 
