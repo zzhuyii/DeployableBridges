@@ -379,7 +379,7 @@ def build_scissor_model(variant="standard", analysis="deploy", N=None, L=2.0):
 
     plots = Plot_Scissor_Bridge()
     plots.assembly = assembly
-    plots.displayRange = np.asarray([-1, 2 * N + 1, -1, 3, -1, 3], dtype=float)
+    plots.displayRange = np.asarray([-1, L * N + 1, -1, L+1, -1, L+1], dtype=float)
     plots.viewAngle1 = 20
     plots.viewAngle2 = 20
 
