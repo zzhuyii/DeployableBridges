@@ -32,7 +32,7 @@ def set_improved_deployment_coordinates(model, dep_rate):
 
 
 
-def improvedScissor_deploy(secNum,dep_rate,Lb):
+def improvedScissor_deploy(secNum,dep_rate,Lb, designCode):
 
     model = build_scissor2_model(N=secNum, L=Lb)
     
