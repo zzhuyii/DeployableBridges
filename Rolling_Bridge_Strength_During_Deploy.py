@@ -67,7 +67,7 @@ def write_summary(name, lines):
 
 
 def rolling_deploy(N,dep_rate,L):
-    H = 2.0
+    H = L
     W = 2.0
 
     barA = 0.00415

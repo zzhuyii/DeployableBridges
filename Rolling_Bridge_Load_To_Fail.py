@@ -46,7 +46,7 @@ def check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp):
 
 def rolling_fail(N,L):
     
-    H = 2.0
+    H = L
     W = 2.0
     barA = 0.00415
     barE = 2.0e11

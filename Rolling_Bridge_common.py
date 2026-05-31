@@ -160,7 +160,7 @@ def build_rolling_bridge(
 
     plots = Plot_Rolling_Bridge()
     plots.assembly = assembly
-    plots.displayRange = np.array([-0.5, 2.0 * N + 0.5, -0.5, 2.5, -0.5, 2.5], dtype=float)
+    plots.displayRange = np.array([-0.5, L * N + 0.5, -0.5, L+0.5, -0.5, L+0.5], dtype=float)
     plots.viewAngle1 = 20
     plots.viewAngle2 = 20
 
