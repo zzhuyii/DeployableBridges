@@ -27,6 +27,10 @@ class ScissorModel:
     settings: dict
 
 
+def as_int_array(rows):
+    return np.asarray(rows, dtype=int)
+
+
 def save_figure(fig, path, dpi=220):
     os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
     fig.savefig(path, dpi=dpi, bbox_inches="tight")

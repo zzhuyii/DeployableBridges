@@ -1,13 +1,5 @@
 import numpy as np
-
-r"""Kirigami truss geometry translated from:
-D:\PAPER\1st paper\2026-DeployableBridges\Kirigami_Truss_Deploy.m
-
-The updated MATLAB deploy source uses L=2, gap=0, N=8, 4-node rotational
-springs, and 3-node rotational springs. This module intentionally rejects
-legacy N values so the deploy script cannot fall back to an old N=2 model.
-"""
-
+import os
 from Elements_Nodes import Elements_Nodes
 from Vec_Elements_Bars import Vec_Elements_Bars
 from Vec_Elements_CST import Vec_Elements_CST
@@ -16,7 +8,11 @@ from CD_Elements_RotSprings_3N import CD_Elements_RotSprings_3N
 from Assembly_KirigamiTruss import Assembly_KirigamiTruss
 from Plot_KirigamiTruss import Plot_KirigamiTruss
 
+from AASHTO_Checks import check_truss_lrfd
+from AREMA_Checks import arema_member_check
 
+
+# This code generate the kirigami bridge assembly
 def build_kirigami_truss(L, N,
     barA=0.0023,
     barE=2.0e11,
@@ -160,3 +156,51 @@ def build_kirigami_truss(L, N,
     plots.view_angle2 = 20
 
     return assembly, node, bar, cst, rot_spr_4N, rot_spr_3N, plots
+
+
+# compute the total bar length and self weight of the bridge
+def bar_length_and_weight(node, bar, rho_steel=7850.0, g=9.81):
+    total_length = 0.0
+    total_weight = 0.0
+    for idx, (n1, n2) in enumerate(bar.node_ij_mat):
+        length = np.linalg.norm(node.coordinates_mat[n1 - 1] - node.coordinates_mat[n2 - 1])
+        total_length += length
+        total_weight += length * bar.A_vec[idx] * rho_steel * g
+    return total_length, total_weight
+
+# compute deformation matrix during deployment
+def deployment_offset(node_count, dep_rate, N):
+    deploy_path = os.path.abspath("KirigamiUhis.npy")
+
+    Uhis = np.load(deploy_path)
+    print(Uhis.shape)
+    Uhis = Uhis[:,0:(N*16+4),:]
+    
+    dep_step = max(1, int((1.0 - dep_rate) * Uhis.shape[0]))
+    idx = min(Uhis.shape[0], dep_step) - 1
+    print(f"Using deployment history step {idx + 1}/{Uhis.shape[0]} from {deploy_path}")
+    return Uhis[idx]
+
+
+def check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp, designCode):
+    truss_strain = bar.solve_strain(node, U_end)
+    internal_force = truss_strain * bar.E_vec * bar.A_vec
+    Lc = bar.L0_vec.reshape(-1)
+    pass_yn = np.zeros(internal_force.size, dtype=bool)
+    dcr = np.full(internal_force.size, np.nan, dtype=float)
+    
+    if designCode=='AASTHO':
+        for j, Pu in enumerate(1.5 * internal_force):
+            passed, _, _, _, _, dcr_j = check_truss_lrfd(
+                Pu, bar.A_vec[j], An, bar.E_vec[j], Lc[j], r_val, Fy, Fu, Rp
+            )
+            pass_yn[j] = passed
+            dcr[j] = dcr_j
+    else:
+        for j, Pu in enumerate(internal_force):
+            passed, dcr_j = arema_member_check(
+                Pu, bar.A_vec[j], An, bar.E_vec[j], Lc[j], r_val, Fy, Fu, Rp
+            )
+            pass_yn[j] = passed
+            dcr[j] = dcr_j
+    return truss_strain, pass_yn, dcr
