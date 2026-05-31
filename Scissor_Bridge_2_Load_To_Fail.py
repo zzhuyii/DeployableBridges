@@ -38,7 +38,7 @@ def improvedScissor_fail(secNum,Lb,designCode):
     
     nr.verbose = False
 
-    force = 20000.0
+    force = 100000.0
     history = []
     Uhis = U_end = truss_strain = pass_yn = dcr = None
     total_F = 0.0
