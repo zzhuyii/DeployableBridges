@@ -13,40 +13,40 @@ from AASHTO_Checks import check_truss_lrfd
 from AREMA_Checks import arema_member_check
 
 
-def check_members(model, U_end, An, r_val, Fy, Fu, Rp, designCode):
-    truss_strain = model.bar.solve_strain(model.node, U_end)
-    internal_force = truss_strain * model.bar.E_vec * model.bar.A_vec
-    Lc = model.bar.L0_vec.reshape(-1)
+def check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp, designCode):
+    truss_strain = bar.solve_strain(node, U_end)
+    internal_force = truss_strain * bar.E_vec * bar.A_vec
+    Lc = bar.L0_vec.reshape(-1)
     pass_yn = np.zeros(internal_force.size, dtype=bool)
     dcr = np.full(internal_force.size, np.nan, dtype=float)
     
     if designCode=='AASHTO':
         for j, Pu in enumerate(1.5 * internal_force):
             passed, _, _, _, _, dcr_j = check_truss_lrfd(
-                Pu, model.bar.A_vec[j], An, model.bar.E_vec[j], Lc[j], r_val, Fy, Fu, Rp
+                Pu, bar.A_vec[j], An, bar.E_vec[j], Lc[j], r_val, Fy, Fu, Rp
             )
             pass_yn[j] = passed
             dcr[j] = dcr_j
     else:
         for j, Pu in enumerate(internal_force):
             passed, dcr_j = arema_member_check(
-                Pu, model.bar.A_vec[j], An, model.bar.E_vec[j], Lc[j], r_val, Fy, Fu, Rp
+                Pu, bar.A_vec[j], An, bar.E_vec[j], Lc[j], r_val, Fy, Fu, Rp
             )
             pass_yn[j] = passed
             dcr[j] = dcr_j
     return truss_strain, pass_yn, dcr
 
 
-def bridge_self_weight(model):
+def bridge_self_weight(node,bar):
     rho_steel = 7850.0
     g = 9.81
     L_total = 0.0
     W_bar = 0.0
-    coords = model.node.coordinates_mat
-    for i, (n1, n2) in enumerate(model.bar.node_ij_mat):
+    coords = node.coordinates_mat
+    for i, (n1, n2) in enumerate(bar.node_ij_mat):
         length = np.linalg.norm(coords[n1 - 1, :] - coords[n2 - 1, :])
         L_total += length
-        W_bar += length * model.bar.A_vec[i] * rho_steel * g
+        W_bar += length * bar.A_vec[i] * rho_steel * g
     return L_total, W_bar
 
 
