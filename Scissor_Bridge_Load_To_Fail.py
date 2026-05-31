@@ -65,6 +65,7 @@ def scissor_fail(secNum, Lb, designCode):
         max_moment = 1.5 * float(np.max(moment_vec))
         moment_capacity = Fy * Iy / 0.0762
         axial_safe = bool(np.all(pass_yn))
+        
         moment_safe = bool(moment_capacity > max_moment)
         safe = axial_safe and moment_safe
         history.append([step, total_F, float(np.nanmax(dcr)), max_moment, moment_capacity, 1.0 if safe else 0.0])
