@@ -1,56 +1,41 @@
 import os
 import numpy as np
 from Solver_NR_Loading import Solver_NR_Loading
-from scissor_common import (
-    bridge_self_weight,
-    build_scissor_model,
-    check_truss_lrfd,
-    load_supports,
-    local_buckling_message,
-)
+
+from scissor2_common import build_scissor2_model, bridge_self_weight, check_members
 
 
 OUT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-def check_members(model, U_end, An, r_val, Fy, Fu, Rp):
-    truss_strain = model.bar.solve_strain(model.node, U_end)
-    internal_force = truss_strain * model.bar.E_vec * model.bar.A_vec
-    Lc = model.bar.L0_vec.reshape(-1)
-    pass_yn = np.zeros(internal_force.size, dtype=bool)
-    dcr = np.full(internal_force.size, np.nan, dtype=float)
-    for j, Pu in enumerate(1.5 * internal_force):
-        passed, _, _, _, _, dcr_j = check_truss_lrfd(
-            Pu, model.bar.A_vec[j], An, model.bar.E_vec[j], Lc[j], r_val, Fy, Fu, Rp
-        )
-        pass_yn[j] = passed
-        dcr[j] = dcr_j
-    return truss_strain, pass_yn, dcr
+def improvedScissor_fail(secNum,Lb,designCode):
 
-def improvedScissor_fail(secNum,Lb):
-
-    model = build_scissor_model(variant="improved", analysis="load", N=secNum,L=Lb)
-    model.assembly.Initialize_Assembly()
+    assembly, node, bar, act_bar, cst, rot3, rot4, plots = build_scissor2_model(N=secNum, L=Lb)
+    assembly.Initialize_Assembly()
 
     Fy = 345e6
     Fu = 427e6
-    E = model.settings["barE"]
-    Ix = model.settings["Ix"]
-    Iy = model.settings["Iy"]
-    barA = model.settings["barA"]
+    E = 2.0e11
+    Ix = 7.16e-6
+    Iy = 7.16e-6
+    barA = 0.00415
     An = barA * 0.9
     Rp = 1.0
     r_val = np.sqrt(Ix / barA)
 
-    _, lambda_r, buckling_status = local_buckling_message(E, Fy)
-    print("--- Local Buckling Check (AASHTO LRFD Art. 6.9.4.2) ---")
-    print(f"  lambda_r = {lambda_r:.2f}")
-    print(f"  {buckling_status}")
 
-    L_total, W_bar = bridge_self_weight(model)
+    L_total, W_bar = bridge_self_weight(node,bar)
     nr = Solver_NR_Loading()
-    nr.assembly = model.assembly
-    nr.supp = load_supports(model.settings["N"], model.settings["stride"])
+    nr.assembly = assembly
+    
+    endNode=10*secNum
+    
+    nr.supp = np.asarray([
+        [0, 1, 1, 1],
+        [1, 1, 1, 1],
+        [endNode, 0, 1, 1],
+        [endNode + 1, 0, 1, 1]])
+    
     nr.verbose = False
 
     force = 20000.0
@@ -63,9 +48,9 @@ def improvedScissor_fail(secNum,Lb):
     for step in range(1, 101):
         load_rows = []
         total_F = 0.0
-        for k in range(1, model.settings["N"]):
-            n1 = model.settings["stride"] * k
-            n2 = model.settings["stride"] * k + 1
+        for k in range(1, secNum):
+            n1 = 10 * k
+            n2 = 10 * k + 1
             load_rows += [[n1, 0.0, 0.0, -force * step], [n2, 0.0, 0.0, -force * step]]
             total_F += force * 2.0 * step
 
@@ -75,10 +60,10 @@ def improvedScissor_fail(secNum,Lb):
         nr.tol = 1.0e-5
         Uhis = nr.Solve()
         U_end = Uhis[-1]
-        truss_strain, pass_yn, dcr = check_members(model, U_end, An, r_val, Fy, Fu, Rp)
+        truss_strain, pass_yn, dcr = check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp, designCode)
 
-        model.rot3.Solve_Global_Theta(model.node, U_end)
-        moment_vec = np.abs(model.rot3.theta_current_vec - model.rot3.theta_stress_free_vec) * model.rot3.rot_spr_K_vec
+        rot3.Solve_Global_Theta(node, U_end)
+        moment_vec = np.abs(rot3.theta_current_vec - rot3.theta_stress_free_vec) * rot3.rot_spr_K_vec
         max_moment = 1.5 * float(np.max(moment_vec))
         moment_capacity = Fy * Iy / 0.0762
         axial_safe = bool(np.all(pass_yn))
@@ -102,14 +87,14 @@ def improvedScissor_fail(secNum,Lb):
             break
 
 
-    model.plots.viewAngle1=10
-    model.plots.viewAngle2=-75 
+    plots.viewAngle1=10
+    plots.viewAngle2=-75 
 
-    truss_stress = truss_strain * model.bar.E_vec
+    truss_stress = truss_strain * bar.E_vec
     # save_figure(model.plots.Plot_Shape_Bar_Stress(truss_stress,U_end), os.path.join(OUT_DIR, "Scissor_Bridge_2_Load_To_Fail_Bar_Stress.png"))
     # save_figure(model.plots.Plot_Shape_Bar_Failure(pass_yn,U_end), os.path.join(OUT_DIR, "Scissor_Bridge_2_Load_To_Fail_Bar_Failure.png"))
 
-    fig1=model.plots.Plot_Shape_Bar_Stress(truss_stress,U_end)
-    fig2=model.plots.Plot_Shape_Bar_Failure(pass_yn,U_end)
+    fig1=plots.Plot_Shape_Bar_Stress(truss_stress,U_end)
+    fig2=plots.Plot_Shape_Bar_Failure(pass_yn,U_end)
 
     return fig1, fig2, total_F, W_bar
