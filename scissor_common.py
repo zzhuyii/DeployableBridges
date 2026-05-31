@@ -13,6 +13,17 @@ from Vec_Elements_Bars import Vec_Elements_Bars
 from Vec_Elements_CST import Vec_Elements_CST
 from Vec_Elements_RotSprings_4N import Vec_Elements_RotSprings_4N
 
+from scissor2_common import (
+    _improved_act_bars,
+    _improved_bars,
+    _improved_coordinates,
+    _improved_cst,
+    _improved_rot3,
+    _improved_rot4,
+    improved_deploy_delta,
+    improved_deploy_supports,
+)
+
 
 @dataclass
 class ScissorModel:
@@ -107,30 +118,6 @@ def _standard_coordinates(N, L):
     return np.asarray(coords, dtype=float)
 
 
-def _improved_coordinates(N, L):
-    coords = []
-    for i in range(1, N + 1):
-        x0 = L * (i - 1)
-        coords += [
-            [x0, 0, 0],
-            [x0, L, 0],
-            [x0, 0, L],
-            [x0, L, L],
-            [x0 + L / 2, 0, L / 2],
-            [x0 + L / 2, L, L / 2],
-            [x0 + L / 2, 0, 0],
-            [x0 + L / 2, L, 0],
-            [x0 + L / 2, 0, L],
-            [x0 + L / 2, L, L],
-        ]
-    coords += [
-        [L * N, 0, 0],
-        [L * N, L, 0],
-        [L * N, 0, L],
-        [L * N, L, L],
-    ]
-    return np.asarray(coords, dtype=float)
-
 
 def _standard_cst(N):
     rows = []
@@ -144,18 +131,6 @@ def _standard_cst(N):
         ]
     return rows
 
-
-def _improved_cst(N):
-    rows = []
-    for i in range(1, N + 1):
-        b = 10 * (i - 1)
-        rows += [
-            [b + 1, b + 2, b + 7],
-            [b + 2, b + 7, b + 8],
-            [b + 7, b + 8, b + 11],
-            [b + 8, b + 12, b + 11],
-        ]
-    return rows
 
 
 def _standard_bars(N, load_case, barA, barA_brace):
@@ -186,38 +161,6 @@ def _standard_bars(N, load_case, barA, barA_brace):
     return rows, areas
 
 
-def _improved_bars(N, load_case, barA, barA_brace):
-    rows = []
-    areas = []
-    for i in range(1, N + 1):
-        b = 10 * (i - 1)
-        base_rows = [
-            [b + 1, b + 7], [b + 7, b + 11], [b + 2, b + 8], [b + 8, b + 12],
-            [b + 3, b + 9], [b + 9, b + 13], [b + 4, b + 10], [b + 10, b + 14],
-            [b + 3, b + 4], [b + 9, b + 10],
-            [b + 1, b + 2], [b + 7, b + 8],
-            [b + 1, b + 5], [b + 3, b + 5], [b + 2, b + 6], [b + 4, b + 6],
-            [b + 5, b + 13], [b + 5, b + 11], [b + 6, b + 12], [b + 6, b + 14],
-            [b + 3, b + 10],
-        ]
-        if load_case:
-            base_rows += [
-                [b + 4, b + 9], [b + 13, b + 10], [b + 9, b + 14],
-                [b + 2, b + 7], [b + 1, b + 8], [b + 8, b + 11], [b + 7, b + 12],
-            ]
-            rows += base_rows
-            areas += [barA] * 8 + [barA_brace] * 4 + [barA] * 8 + [barA_brace] * 8
-        else:
-            base_rows += [[b + 13, b + 10], [b + 2, b + 7], [b + 8, b + 11]]
-            rows += base_rows
-    end = 10 * N
-    rows += [[end + 1, end + 2], [end + 3, end + 4]]
-    if load_case:
-        areas += [barA_brace, barA_brace]
-    else:
-        areas = [barA] * len(rows)
-    return rows, areas
-
 
 def _standard_rot3(N):
     rows = []
@@ -234,22 +177,6 @@ def _standard_rot3(N):
     return rows
 
 
-def _improved_rot3(N):
-    rows = []
-    for i in range(1, N + 1):
-        b = 10 * (i - 1)
-        rows += [
-            [b + 1, b + 5, b + 13], [b + 3, b + 5, b + 11],
-            [b + 2, b + 6, b + 14], [b + 4, b + 6, b + 12],
-            [b + 4, b + 3, b + 5], [b + 3, b + 4, b + 6],
-            [b + 2, b + 1, b + 5], [b + 6, b + 2, b + 1],
-            [b + 5, b + 11, b + 12], [b + 11, b + 12, b + 6],
-            [b + 5, b + 13, b + 14], [b + 13, b + 14, b + 6],
-            [b + 11, b + 13, b + 14], [b + 13, b + 14, b + 12],
-            [b + 14, b + 12, b + 11], [b + 12, b + 11, b + 13],
-        ]
-    return rows
-
 
 def _standard_rot4(N):
     rows = []
@@ -258,18 +185,6 @@ def _standard_rot4(N):
         rows += [[b + 1, b + 2, b + 7, b + 8], [b + 7, b + 8, b + 9, b + 10]]
     return rows
 
-
-def _improved_rot4(N):
-    rows = []
-    for i in range(1, N + 1):
-        b = 10 * (i - 1)
-        rows += [
-            [b + 1, b + 2, b + 7, b + 8],
-            [b + 7, b + 8, b + 11, b + 12],
-            [b + 4, b + 3, b + 10, b + 9],
-            [b + 10, b + 9, b + 14, b + 13],
-        ]
-    return rows
 
 
 def _standard_act_bars(N):
@@ -285,19 +200,6 @@ def _standard_act_bars(N):
         rows += [[b + 7, b + 5], [b + 8, b + 6]]
     return rows, act_bar_num_1
 
-
-def _improved_act_bars(N):
-    rows = []
-    for i in range(1, N + 1):
-        b = 10 * (i - 1)
-        rows += [[b + 1, b + 3], [b + 2, b + 4]]
-    end = 10 * N
-    rows += [[end + 1, end + 3], [end + 2, end + 4]]
-    act_bar_num_1 = len(rows)
-    for i in range(1, N + 1):
-        b = 10 * (i - 1)
-        rows += [[b + 7, b + 5], [b + 5, b + 9], [b + 6, b + 10], [b + 8, b + 6]]
-    return rows, act_bar_num_1
 
 
 def build_scissor_model(variant="standard", analysis="deploy", N=None, L=2.0):
@@ -423,20 +325,6 @@ def standard_deploy_supports(node_num, N):
     return supp
 
 
-def improved_deploy_supports(node_num):
-    supp = np.column_stack([
-        np.arange(node_num),
-        np.zeros(node_num),
-        np.ones(node_num),
-        np.zeros(node_num),
-    ])
-    supp[0, :] = [0, 1, 1, 1]
-    supp[1, :] = [1, 1, 1, 1]
-    supp[2, :] = [2, 1, 1, 0]
-    supp[3, :] = [3, 1, 1, 0]
-    return supp
-
-
 def load_supports(N, stride):
     end = stride * N
     return np.asarray([
@@ -453,10 +341,6 @@ def standard_deploy_delta(source_step):
     if source_step <= 400:
         return 0.001 * 200 + 0.0004 * (source_step - 200)
     return 0.001 * 200 + 0.0004 * 200 + 0.0001 * (source_step - 400)
-
-
-def improved_deploy_delta(source_step):
-    return 0.001 * source_step
 
 
 def source_step_for_frame(frame_index, frame_count, source_step_count):
