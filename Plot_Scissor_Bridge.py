@@ -1,6 +1,4 @@
-import os
 from matplotlib.patches import Patch
-import imageio.v2 as imageio
 import matplotlib
 
 matplotlib.use("Agg")

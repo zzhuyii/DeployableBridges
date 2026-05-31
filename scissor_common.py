@@ -1,8 +1,5 @@
-import os
-from dataclasses import dataclass
 import matplotlib
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import numpy as np
 
 from Assembly_Scissor_Bridge import Assembly_Scissor_Bridge
@@ -219,40 +216,5 @@ def standard_deploy_supports(node_num, N):
     supp[end+2, :] = [end+2, 0, 1, 0]
     supp[end+3, :] = [end+3, 0, 1, 0]
     return supp
-
-
-# Actuator displacement magnitude for a given integer source step
-def standard_deploy_delta(source_step):
-    if source_step <= 200:
-        return 0.001 * source_step
-    if source_step <= 400:
-        return 0.001 * 200 + 0.0004 * (source_step - 200)
-    return 0.001 * 200 + 0.0004 * 200 + 0.0001 * (source_step - 400)
-
-
-def load_supports(N, stride):
-    end = stride * N
-    return np.asarray([
-        [0,     1, 1, 1],
-        [1,     1, 1, 1],
-        [end,   0, 1, 1],
-        [end+1, 0, 1, 1],
-    ], dtype=float)
-
-
-def source_step_for_frame(frame_index, frame_count, source_step_count):
-    if frame_count <= 1:
-        return source_step_count
-    return int(round(1 + frame_index * (source_step_count - 1) / (frame_count - 1)))
-
-
-def actuator_target_lengths(base_L0, dL, L, act_bar_num_1, act_bar_count):
-    target = np.asarray(base_L0, dtype=float).copy()
-    target[:act_bar_num_1] = base_L0[:act_bar_num_1] + dL
-    theta = np.arccos(np.clip((L + dL) / np.sqrt(2.0) / L, -1.0, 1.0))
-    L2 = L / np.sqrt(2.0) * np.sin(theta)
-    L3 = np.sqrt(max((L / 2.0) ** 2 - L2 ** 2, 0.0))
-    target[act_bar_num_1:act_bar_count] = base_L0[act_bar_num_1:act_bar_count] + dL / 2.0 - L3
-    return target
 
 
