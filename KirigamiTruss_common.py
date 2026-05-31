@@ -189,7 +189,7 @@ def check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp, designCode):
     pass_yn = np.zeros(internal_force.size, dtype=bool)
     dcr = np.full(internal_force.size, np.nan, dtype=float)
     
-    if designCode=='AASTHO':
+    if designCode=='AASHTO':
         for j, Pu in enumerate(1.5 * internal_force):
             passed, _, _, _, _, dcr_j = check_truss_lrfd(
                 Pu, bar.A_vec[j], An, bar.E_vec[j], Lc[j], r_val, Fy, Fu, Rp
