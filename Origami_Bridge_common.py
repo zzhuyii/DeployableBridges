@@ -120,7 +120,7 @@ def build_origami_bridge(
 
     plots = Plot_Origami()
     plots.assembly = assembly
-    plots.displayRange = np.array([-1.0, 4.0 * (N + 1), -1.0, 5.0, -1.0, 3.0], dtype=float)
+    plots.displayRange = np.array([-1.0, L * (N + 1), -1.0, L+1.0, -1.0, L+1.0], dtype=float)
     plots.viewAngle1 = 20
     plots.viewAngle2 = 20
 

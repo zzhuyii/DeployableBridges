@@ -50,7 +50,7 @@ if designCode == 'AASHTO':
              [2,4,6,8])
     
     L = st.selectbox(
-         "Unit Length:",
+         "Unit Length (m):",
          [2.0, 4.0, 6.0 ])
     
     st.subheader("Strength during deployment")

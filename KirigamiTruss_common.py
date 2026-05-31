@@ -155,7 +155,7 @@ def build_kirigami_truss(L, N,
 
     plots = Plot_KirigamiTruss()
     plots.assembly = assembly
-    plots.display_range = np.array([-1.0, L * (N + 1), -1.0, 3.0, -1.0, 3.0], dtype=float)
+    plots.display_range = np.array([-1.0, L * (N + 1), -1.0, L+1.0, -1.0, L+1.0], dtype=float)
     plots.view_angle1 = 20
     plots.view_angle2 = 20
 
