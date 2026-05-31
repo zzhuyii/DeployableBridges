@@ -12,7 +12,7 @@ from Solver_NR_Loading import Solver_NR_Loading
 OUT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-def origami_deploy(L,N,dep_rate, designCode):
+def origami_deploy(L, N, dep_rate, designCode):
     
     barA = 0.00415
     barE = 2.0e11
