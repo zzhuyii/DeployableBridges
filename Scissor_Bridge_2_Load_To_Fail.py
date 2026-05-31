@@ -1,12 +1,10 @@
 import os
 import numpy as np
-from Solver_NR_Loading import Solver_NR_Loading
 
+from Solver_NR_Loading import Solver_NR_Loading
 from scissor2_common import build_scissor2_model, bridge_self_weight, check_members
 
-
 OUT_DIR = os.path.dirname(os.path.abspath(__file__))
-
 
 def improvedScissor_fail(secNum,Lb,designCode):
 

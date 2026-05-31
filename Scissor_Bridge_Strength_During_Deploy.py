@@ -1,21 +1,15 @@
 import os
 import numpy as np
+
 from Solver_NR_Loading import Solver_NR_Loading
-from scissor_common import (
-    bridge_self_weight,
-    build_scissor_model,
-    check_truss_lrfd,
-    local_buckling_message,
-    save_figure,
-)
+from scissor_common import bridge_self_weight,build_scissor1_model,local_buckling_message,check_members
 
 
 OUT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-def set_standard_deployment_coordinates(model, dep_rate):
-    N = model.settings["N"]
-    L = model.settings["L"]
+def set_standard_deployment_coordinates(node, N, L, dep_rate):
+
     theta = np.pi / 4.0 * dep_rate
     dL = L * np.sqrt(2.0) * np.cos(theta) - L
     L2 = L / np.sqrt(2.0) * np.sin(theta)
@@ -30,53 +24,37 @@ def set_standard_deployment_coordinates(model, dep_rate):
             [xm, 0.0, L3], [xm, L, L3],
         ]
     coords += [[2.0 * L2 * N, 0.0, 0.0], [2.0 * L2 * N, L, 0.0], [2.0 * L2 * N, 0.0, L + dL], [2.0 * L2 * N, L, L + dL]]
-    model.node.coordinates_mat = np.asarray(coords, dtype=float)
+    node.coordinates_mat = np.asarray(coords, dtype=float)
     return dL
 
 
-def check_members(model, U_end, An, r_val, Fy, Fu, Rp):
-    truss_strain = model.bar.solve_strain(model.node, U_end)
-    internal_force = truss_strain * model.bar.E_vec * model.bar.A_vec
-    Lc = model.bar.L0_vec.reshape(-1)
-    pass_yn = np.zeros(internal_force.size, dtype=bool)
-    dcr = np.full(internal_force.size, np.nan, dtype=float)
-    for j, Pu in enumerate(1.5 * internal_force):
-        passed, _, _, _, _, dcr_j = check_truss_lrfd(
-            Pu, model.bar.A_vec[j], An, model.bar.E_vec[j], Lc[j], r_val, Fy, Fu, Rp
-        )
-        pass_yn[j] = passed
-        dcr[j] = dcr_j
-    return truss_strain, pass_yn, dcr
 
-
-def scissor_deploy(secNum,dep_rate,Lb):
+def scissor_deploy(secNum,dep_rate,Lb,designCode):
     dep_rate = 0.5
 
-    model = build_scissor_model(variant="standard", analysis="load", N=secNum,L=Lb)
-    dL = set_standard_deployment_coordinates(model, dep_rate)
-    model.assembly.Initialize_Assembly()
+    assembly, node, bar, act_bar, cst, rot3, rot4, plots = build_scissor1_model(N=secNum,L=Lb)
+    
+    dL = set_standard_deployment_coordinates(node, secNum, Lb, dep_rate)
+    
+    assembly.Initialize_Assembly()
 
     Fy = 345e6
     Fu = 427e6
-    E = model.settings["barE"]
-    Ix = model.settings["Ix"]
-    Iy = model.settings["Iy"]
-    barA = model.settings["barA"]
+    E = 2.0e11
+    Ix = 7.16e-6
+    Iy = 7.16e-6
+    barA = 0.00415
     An = barA * 0.9
     Rp = 1.0
     r_val = np.sqrt(Ix / barA)
 
-    _, lambda_r, buckling_status = local_buckling_message(E, Fy)
-    print("--- Local Buckling Check (AASHTO LRFD Art. 6.9.4.2) ---")
-    print(f"  lambda_r = {lambda_r:.2f}")
-    print(f"  {buckling_status}")
 
-    L_total, W_bar = bridge_self_weight(model)
+    L_total, W_bar = bridge_self_weight(node,bar)
     W_deck = 2.0 * (0.03 + 10.0 / 50.0 * 0.2) * 16.0 * 1000.0 * 9.8
-    node_num = model.node.coordinates_mat.shape[0]
+    node_num = node.coordinates_mat.shape[0]
 
     nr = Solver_NR_Loading()
-    nr.assembly = model.assembly
+    nr.assembly = assembly
     nr.supp = np.asarray([[0, 1, 1, 1], [1, 1, 1, 1], [2, 1, 1, 1], [3, 1, 1, 1]], dtype=float)
 
     history = []
@@ -91,9 +69,9 @@ def scissor_deploy(secNum,dep_rate,Lb):
         nr.tol = 1.0e-5
         Uhis = nr.Solve()
         U_end = Uhis[-1]
-        truss_strain, pass_yn, dcr = check_members(model, U_end, An, r_val, Fy, Fu, Rp)
-        model.rot3.Solve_Global_Theta(model.node, U_end)
-        moment_vec = np.abs(model.rot3.theta_current_vec - model.rot3.theta_stress_free_vec) * model.rot3.rot_spr_K_vec
+        truss_strain, pass_yn, dcr = check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp, designCode)
+        rot3.Solve_Global_Theta(node, U_end)
+        moment_vec = np.abs(rot3.theta_current_vec - rot3.theta_stress_free_vec) * rot3.rot_spr_K_vec
         max_moment = 1.5 * float(np.max(moment_vec))
         moment_capacity = Fy * Iy / 0.0762
         total_F = node_num * force
@@ -104,15 +82,15 @@ def scissor_deploy(secNum,dep_rate,Lb):
             break
 
 
-    model.plots.viewAngle1=10
-    model.plots.viewAngle2=-75 
+    plots.viewAngle1=10
+    plots.viewAngle2=-75 
 
-    truss_stress = truss_strain * model.bar.E_vec
+    truss_stress = truss_strain * bar.E_vec
     # save_figure(model.plots.Plot_Shape_Bar_Stress(truss_stress,U_end), os.path.join(OUT_DIR, "Scissor_Bridge_Strength_During_Deploy_Bar_Stress.png"))
     # save_figure(model.plots.Plot_Shape_Bar_Failure(pass_yn,U_end), os.path.join(OUT_DIR, "Scissor_Bridge_Strength_During_Deploy_Bar_Failure.png"))
 
-    fig1=model.plots.Plot_Shape_Bar_Stress(truss_stress,U_end)
-    fig2=model.plots.Plot_Shape_Bar_Failure(pass_yn,U_end)
+    fig1=plots.Plot_Shape_Bar_Stress(truss_stress,U_end)
+    fig2=plots.Plot_Shape_Bar_Failure(pass_yn,U_end)
     
     U1=U_end[secNum*8+1, 2]
     U2=U_end[secNum*8+2, 2]

@@ -30,9 +30,6 @@ def set_improved_deployment_coordinates(node, N, L, dep_rate):
     return dL
 
 
-
-
-
 def improvedScissor_deploy(secNum,dep_rate,Lb, designCode):
 
     assembly, node, bar, act_bar, cst, rot3, rot4, plots = build_scissor2_model(N=secNum, L=Lb)
@@ -50,7 +47,6 @@ def improvedScissor_deploy(secNum,dep_rate,Lb, designCode):
     An = barA * 0.9
     Rp = 1.0
     r_val = np.sqrt(Ix / barA)
-
 
 
     L_total, W_bar = bridge_self_weight(node,bar)
