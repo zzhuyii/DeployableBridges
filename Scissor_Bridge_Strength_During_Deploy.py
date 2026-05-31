@@ -2,7 +2,7 @@ import os
 import numpy as np
 
 from Solver_NR_Loading import Solver_NR_Loading
-from scissor_common import bridge_self_weight,build_scissor1_model,local_buckling_message,check_members
+from scissor_common import bridge_self_weight,build_scissor1_model,check_members
 
 
 OUT_DIR = os.path.dirname(os.path.abspath(__file__))
