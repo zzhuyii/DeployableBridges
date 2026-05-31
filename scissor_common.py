@@ -197,24 +197,3 @@ def build_scissor1_model(N, L=2.0,
 
     return assembly, node, bar, act_bar, cst, rot3, rot4, plots
 
-
-# Deploy supports: both ends pinned for the standard bridge
-def standard_deploy_supports(node_num, N):
-    supp = np.column_stack([
-        np.arange(node_num),
-        np.zeros(node_num),
-        np.ones(node_num),
-        np.zeros(node_num),
-    ])
-    supp[0, :] = [0, 1, 1, 1]
-    supp[1, :] = [1, 1, 1, 1]
-    supp[2, :] = [2, 1, 1, 0]
-    supp[3, :] = [3, 1, 1, 0]
-    end = 8 * N
-    supp[end,   :] = [end,   0, 1, 1]
-    supp[end+1, :] = [end+1, 0, 1, 1]
-    supp[end+2, :] = [end+2, 0, 1, 0]
-    supp[end+3, :] = [end+3, 0, 1, 0]
-    return supp
-
-

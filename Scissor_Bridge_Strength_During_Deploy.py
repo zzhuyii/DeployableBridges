@@ -29,7 +29,7 @@ def set_standard_deployment_coordinates(node, N, L, dep_rate):
 
 
 
-def scissor_deploy(secNum,dep_rate,Lb,designCode):
+def scissor_deploy(secNum, dep_rate, Lb, designCode):
     dep_rate = 0.5
 
     assembly, node, bar, act_bar, cst, rot3, rot4, plots = build_scissor1_model(N=secNum,L=Lb)
@@ -86,8 +86,6 @@ def scissor_deploy(secNum,dep_rate,Lb,designCode):
     plots.viewAngle2=-75 
 
     truss_stress = truss_strain * bar.E_vec
-    # save_figure(model.plots.Plot_Shape_Bar_Stress(truss_stress,U_end), os.path.join(OUT_DIR, "Scissor_Bridge_Strength_During_Deploy_Bar_Stress.png"))
-    # save_figure(model.plots.Plot_Shape_Bar_Failure(pass_yn,U_end), os.path.join(OUT_DIR, "Scissor_Bridge_Strength_During_Deploy_Bar_Failure.png"))
 
     fig1=plots.Plot_Shape_Bar_Stress(truss_stress,U_end)
     fig2=plots.Plot_Shape_Bar_Failure(pass_yn,U_end)
