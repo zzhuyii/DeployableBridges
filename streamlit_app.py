@@ -57,7 +57,8 @@ if designCode == 'AASHTO':
     
     st.text('Here, we check the truss strength during the deployment process.' + 
             'You can change deployment ratio for different stage of deployment' +
-            'The load applied is the bridge self-weight with AASHTO factors.')
+            'The load applied is the bridge self-weight with AASHTO factors.' +
+            'The cross section are all assumed to be HSS 8X4X5/16.')
     
     DepRate = st.selectbox(
          "Deployment Ratio:",

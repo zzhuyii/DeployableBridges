@@ -92,7 +92,7 @@ def rolling_deploy(N,dep_rate):
         activeBarE=2.0e11, rotK=1.0e6, barA_brace=barA_brace,
     )
     plots.displayRange = np.array([-2.0, 18.0, -1.0, 3.0, -1.0, 14.0], dtype=float)
-    node.coordinates_mat = node.coordinates_mat + rolling_deploy_offset(node.coordinates_mat.shape[0], dep_rate, N)
+    node.coordinates_mat = node.coordinates_mat + rolling_deploy_offset(node.coordinates_mat.shape[0], dep_rate, N)*L/2.0
     assembly.Initialize_Assembly()
     L_total, W_bar = bar_length_and_weight(node, bar)
     W_deck = 2.0 * (0.03 + 10.0 / 50.0 * 0.2) * 16.0 * 1000.0 * 9.8
