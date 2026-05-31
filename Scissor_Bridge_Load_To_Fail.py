@@ -7,7 +7,7 @@ from scissor_common import bridge_self_weight,build_scissor1_model,check_members
 OUT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-def scissor_fail(secNum,Lb,designCode):
+def scissor_fail(secNum, Lb, designCode):
 
     assembly, node, bar, act_bar, cst, rot3, rot4, plots = build_scissor1_model(N=secNum,L=Lb)
     assembly.Initialize_Assembly()
@@ -84,6 +84,8 @@ def scissor_fail(secNum,Lb,designCode):
 
     plots.viewAngle1=10
     plots.viewAngle2=-75 
+    
+    print(pass_yn)
 
     truss_stress = truss_strain * bar.E_vec
     # save_figure(model.plots.Plot_Shape_Bar_Stress(truss_stress,U_end), os.path.join(OUT_DIR, "Scissor_Bridge_Load_To_Fail_Bar_Stress.png"))
