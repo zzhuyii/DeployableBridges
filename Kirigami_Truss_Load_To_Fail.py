@@ -63,7 +63,7 @@ def kirigami_fail(L, N , designCode):
         nr.tol = 1.0e-5
         Uhis = nr.Solve()
         U_end = Uhis[-1]
-        truss_strain, _, pass_yn, dcr = check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp, designCode)
+        truss_strain, pass_yn, dcr = check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp, designCode)
         max_dcr = float(np.nanmax(dcr))
         safe = bool(np.all(pass_yn))
         history.append([step, total_F, max_dcr, 1.0 if safe else 0.0])
