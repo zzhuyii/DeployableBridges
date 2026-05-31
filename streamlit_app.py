@@ -96,7 +96,7 @@ elif BridgeType=='improved scissor':
     st.pyplot(fig1)
     st.pyplot(fig2)    
 elif BridgeType=='rolling':   
-    fig1,fig2,tip=rolling_deploy(N, DepRate, L)    
+    fig1,fig2,tip=rolling_deploy(N, DepRate, L, designCode)    
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")  
     st.write("The tip deflection of rolling bridge in meter unit is:", tip)
@@ -146,7 +146,7 @@ elif BridgeType=='improved scissor':
     st.pyplot(fig1)
     st.pyplot(fig2)   
 elif BridgeType=='rolling':   
-    fig1,fig2, F, Weight=rolling_fail(N,L)    
+    fig1,fig2, F, Weight=rolling_fail(N, L, designCode)    
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png") 
     st.write("The the maximum load rolling bridge can carry is:", F/1000, "kN")

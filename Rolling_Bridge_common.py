@@ -1,19 +1,4 @@
-import os
-import sys
 import numpy as np
-
-r"""Rolling bridge geometry translated from:
-D:\PAPER\1st paper\2026-DeployableBridges\Rolling_Bridge_Deploy.m
-D:\PAPER\1st paper\2026-DeployableBridges\Rolling_Bridge_Pedestrain_Load_LRFD.m
-
-The MATLAB source uses N=8 sections. This module intentionally has no N=2
-fallback or legacy geometry.
-"""
-
-_THIS_DIR = os.path.dirname(os.path.abspath(__file__))
-_PROJECT_ROOT = os.path.abspath(os.path.join(_THIS_DIR, "..", ".."))
-if _PROJECT_ROOT not in sys.path:
-    sys.path.append(_PROJECT_ROOT)
 
 from Elements_Nodes import Elements_Nodes
 from Vec_Elements_Bars import Vec_Elements_Bars
@@ -23,6 +8,59 @@ from Vec_Elements_RotSprings_4N import Vec_Elements_RotSprings_4N
 
 from Assembly_Rolling_Bridge import Assembly_Rolling_Bridge
 from Plot_Rolling_Bridge import Plot_Rolling_Bridge
+
+from AASHTO_Checks import check_truss_lrfd
+from AREMA_Checks import arema_member_check
+
+
+def bar_length_and_weight(node, bar, rho_steel=7850.0, g=9.81):
+    total_length = 0.0
+    total_weight = 0.0
+    for idx, (n1, n2) in enumerate(bar.node_ij_mat):
+        length = np.linalg.norm(node.coordinates_mat[n1 - 1] - node.coordinates_mat[n2 - 1])
+        total_length += length
+        total_weight += length * bar.A_vec[idx] * rho_steel * g
+    return total_length, total_weight
+
+
+def rolling_deploy_offset(node_count, dep_rate,N):
+    # deploy_path = os.path.abspath("RollingUhis.npy")
+
+    Uhis = np.load("RollingUhis.npz")["Uhis"]
+    print(Uhis.shape)
+    
+    dep_step = max(1, int((1.0 - dep_rate) * Uhis.shape[0]))
+    idx = min(Uhis.shape[0], dep_step) - 1
+    
+    Uhis = Uhis[:,0:(N*6),:]
+    
+    print(f"Using rolling deployment step {idx + 1}/{Uhis.shape[0]}")
+    return Uhis[idx] 
+
+
+def check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp, designCode):
+    truss_strain = bar.solve_strain(node, U_end)
+    internal_force = truss_strain * bar.E_vec * bar.A_vec
+    Lc = bar.L0_vec.reshape(-1)
+    pass_yn = np.zeros(internal_force.size, dtype=bool)
+    dcr = np.full(internal_force.size, np.nan, dtype=float)
+    
+    if designCode=='AASHTO':
+        for j, Pu in enumerate(1.5 * internal_force):
+            passed, _, _, _, _, dcr_j = check_truss_lrfd(
+                Pu, bar.A_vec[j], An, bar.E_vec[j], Lc[j], r_val, Fy, Fu, Rp
+            )
+            pass_yn[j] = passed
+            dcr[j] = dcr_j
+    else:
+        for j, Pu in enumerate(internal_force):
+            passed, dcr_j = arema_member_check(
+                Pu, bar.A_vec[j], An, bar.E_vec[j], Lc[j], r_val, Fy, Fu, Rp
+            )
+            pass_yn[j] = passed
+            dcr[j] = dcr_j
+    return truss_strain, pass_yn, dcr
+
 
 
 def build_rolling_bridge(

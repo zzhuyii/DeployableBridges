@@ -1,72 +1,16 @@
 import os
 import matplotlib
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import numpy as np
 
-from AASHTO_Checks import check_truss_lrfd, local_buckling_pass
-from Rolling_Bridge_common import build_rolling_bridge
+from AASHTO_Checks import local_buckling_pass
+from Rolling_Bridge_common import build_rolling_bridge,rolling_deploy_offset,bar_length_and_weight,check_members
 from Solver_NR_Loading import Solver_NR_Loading
 
 
 OUT_DIR = os.path.dirname(os.path.abspath(__file__))
 
-
-def save_figure(fig, name):
-    path = os.path.join(OUT_DIR, name)
-    fig.savefig(path, dpi=200, bbox_inches="tight")
-    plt.close(fig)
-    print(f"Saved: {path}")
-
-
-def bar_length_and_weight(node, bar, rho_steel=7850.0, g=9.81):
-    total_length = 0.0
-    total_weight = 0.0
-    for idx, (n1, n2) in enumerate(bar.node_ij_mat):
-        length = np.linalg.norm(node.coordinates_mat[n1 - 1] - node.coordinates_mat[n2 - 1])
-        total_length += length
-        total_weight += length * bar.A_vec[idx] * rho_steel * g
-    return total_length, total_weight
-
-
-def rolling_deploy_offset(node_count, dep_rate,N):
-    # deploy_path = os.path.abspath("RollingUhis.npy")
-
-    Uhis = np.load("RollingUhis.npz")["Uhis"]
-    print(Uhis.shape)
-    
-    dep_step = max(1, int((1.0 - dep_rate) * Uhis.shape[0]))
-    idx = min(Uhis.shape[0], dep_step) - 1
-    
-    Uhis = Uhis[:,0:(N*6),:]
-    
-    print(f"Using rolling deployment step {idx + 1}/{Uhis.shape[0]}")
-    return Uhis[idx] 
-
-
-def check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp):
-    truss_strain = bar.solve_strain(node, U_end)
-    internal_force = truss_strain * bar.E_vec * bar.A_vec
-    Lc = bar.L0_vec.reshape(-1)
-    pass_yn = np.zeros(internal_force.size, dtype=bool)
-    dcr = np.full(internal_force.size, np.nan, dtype=float)
-    for j, Pu in enumerate(1.5 * internal_force):
-        passed, _, _, _, _, dcr_j = check_truss_lrfd(
-            Pu, bar.A_vec[j], An, bar.E_vec[j], Lc[j], r_val, Fy, Fu, Rp
-        )
-        pass_yn[j] = passed
-        dcr[j] = dcr_j
-    return truss_strain, pass_yn, dcr
-
-
-def write_summary(name, lines):
-    path = os.path.join(OUT_DIR, name)
-    with open(path, "w", encoding="utf-8") as f:
-        f.write("\n".join(lines) + "\n")
-    print(f"Saved: {path}")
-
-
-def rolling_deploy(N,dep_rate,L):
+def rolling_deploy(N,dep_rate,L,designCode):
     H = L
     W = 2.0
 
@@ -117,7 +61,7 @@ def rolling_deploy(N,dep_rate,L):
         nr.tol = 1.0e-5
         Uhis = nr.Solve()
         U_end = Uhis[-1]
-        truss_strain, pass_yn, dcr = check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp)
+        truss_strain, pass_yn, dcr = check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp, designCode)
         total_F = node_num * force
         safe = bool(np.all(pass_yn))
         history.append([step, total_F, float(np.nanmax(dcr)), 1.0 if safe else 0.0])
@@ -129,8 +73,6 @@ def rolling_deploy(N,dep_rate,L):
     plots.view_angle2=-75
 
     truss_stress = truss_strain * bar.E_vec
-    # save_figure(plots.Plot_Shape_Bar_Stress(truss_stress,U_end), "Rolling_Bridge_Strength_During_Deploy_Bar_Stress.png")
-    # save_figure(plots.Plot_Shape_Bar_Failure(pass_yn,U_end), "Rolling_Bridge_Strength_During_Deploy_Bar_Failure.png")
 
     fig1=plots.Plot_Shape_Bar_Stress(truss_stress,U_end)
     fig2=plots.Plot_Shape_Bar_Failure(pass_yn,U_end)

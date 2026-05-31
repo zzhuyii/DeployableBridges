@@ -2,7 +2,7 @@ import numpy as np
 
 
 def check_truss_lrfd(Pu, Ag, An, E, KL, r, Fy=345e6, Fu=427e6, Rp=1.0):
-    """AASHTO LRFD axial member check matching Check_Truss_LRFD.m."""
+
     phi_ty = 0.95
     phi_cb = 0.95
     phi_uf = 0.80
