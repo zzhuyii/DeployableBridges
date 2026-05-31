@@ -16,19 +16,24 @@ from Rolling_Bridge_Strength_During_Deploy import rolling_deploy
 from Rolling_Bridge_Load_To_Fail import rolling_fail
 
 
-st.subheader("Simulation of of deployable bridge")
+st.subheader("Simulation of Deployable Bridge")
 
 st.text('Developer: Zhongqi Fan & Yi Zhu')
 
 st.text('This is a demo for using the Sim-FAST package to simulate the deployment ' + 
         'and load carrying capacity of different deployable bridges. We assume that ' +
         'connections are rigid, all members share the same cross-section, and ' +
-        'ignore buckling related failure mode when calculating the loading.' )
+        'ignore buckling related failure mode when calculating the loading.' + 
+        'Furthermore, the code treats the deployable bridge as a truss and applies' +
+        'corresponding strength evaluations from selected code to check the strength.')
 
 st.markdown("Please find the MATLAB code from: https://github.com/zzhuyii/Sim-FAST")
 
+st.text('The MATLAB code version can provide higher flexibility and check for more' + 
+        'design requirements.')
 
-st.subheader("Select Design Code")
+
+st.subheader("Select design code")
 
 designCode = st.selectbox("Select design code:",['AASHTO','AREMA'])
 
@@ -59,7 +64,8 @@ st.subheader("Strength during deployment")
 
 st.text('Here, we check the truss strength during the deployment process.' + 
         'You can change deployment ratio for different stage of deployment' +
-        'The load applied is the bridge self-weight with AASHTO factors.' +
+        'The load applied is the bridge self-weight with AASHTO factors for LRFD method.' +
+        'For AREMA ASD method, the load applied is the bridge self-weight.' +
         'The cross section are all assumed to be HSS 8X4X5/16.')
 
 DepRate = st.selectbox(
@@ -118,7 +124,7 @@ if BridgeType=='kirigami':
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")  
     st.write("The the maximum load kirigami bridge can carry is:", F/1000, "kN")
-    st.write("The the load over self-weight of kirigami bridge can carry is:", F/Weight)
+    st.write("The the load over self-weight of kirigami bridge can carry is:", {F/Weight:.2f})
     st.pyplot(fig1)
     st.pyplot(fig2)
 elif BridgeType=='origami':   
@@ -126,7 +132,7 @@ elif BridgeType=='origami':
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")  
     st.write("The the maximum load origami bridge can carry is:", F/1000, "kN")
-    st.write("The the load over self-weight of origami bridge can carry is:", F/Weight)
+    st.write("The the load over self-weight of origami bridge can carry is:", {F/Weight:.2f})
     st.pyplot(fig1)
     st.pyplot(fig2)
 elif BridgeType=='scissor':   
@@ -134,7 +140,7 @@ elif BridgeType=='scissor':
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")   
     st.write("The the maximum load scissor bridge can carry is:", F/1000, "kN")
-    st.write("The the load over self-weight of scissor bridge can carry is:", F/Weight)
+    st.write("The the load over self-weight of scissor bridge can carry is:", {F/Weight:.2f})
     st.pyplot(fig1)
     st.pyplot(fig2)
 elif BridgeType=='improved scissor':   
@@ -142,7 +148,7 @@ elif BridgeType=='improved scissor':
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
     st.write("The the maximum load improved scissor bridge can carry is:", F/1000, "kN")
-    st.write("The the load over self-weight of improved scissor bridge can carry is:", F/Weight)
+    st.write("The the load over self-weight of improved scissor bridge can carry is:", {F/Weight:.2f})
     st.pyplot(fig1)
     st.pyplot(fig2)   
 elif BridgeType=='rolling':   
@@ -150,7 +156,7 @@ elif BridgeType=='rolling':
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png") 
     st.write("The the maximum load rolling bridge can carry is:", F/1000, "kN")
-    st.write("The the load over self-weight of rolling bridge can carry is:", F/Weight)
+    st.write("The the load over self-weight of rolling bridge can carry is:", {F/Weight:.2f})
     st.pyplot(fig1)
     st.pyplot(fig2)   
 
