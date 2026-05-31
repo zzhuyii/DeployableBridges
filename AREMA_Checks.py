@@ -50,7 +50,7 @@ def arema_member_check(
         else:
             Fallow=(0.514 * 3.14**2)/(KL_r ** 2)*E
 
-        dcr = - Pu / Fallow * Ag
+        dcr = - Pu / (Fallow * Ag)
         
          
     return bool(dcr <= 1.0), dcr
