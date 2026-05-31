@@ -6,7 +6,6 @@ from scissor_common import (
     build_scissor_model,
     check_truss_lrfd,
     local_buckling_message,
-    save_figure,
 )
 
 

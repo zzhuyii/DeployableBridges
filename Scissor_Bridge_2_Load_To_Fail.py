@@ -7,7 +7,6 @@ from scissor_common import (
     check_truss_lrfd,
     load_supports,
     local_buckling_message,
-    save_figure,
 )
 
 
