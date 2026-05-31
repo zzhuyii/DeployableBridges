@@ -23,14 +23,14 @@ st.text('Developer: Zhongqi Fan & Yi Zhu')
 st.text('This is a demo for using the Sim-FAST package to simulate the deployment ' + 
         'and load carrying capacity of different deployable bridges. We assume that ' +
         'connections are rigid, all members share the same cross-section, and ' +
-        'ignore buckling related failure mode when calculating the loading.' + 
+        'ignore global buckling related failure mode when calculating the loading. ' + 
         'Furthermore, the code treats the deployable bridge as a truss and applies' +
         'corresponding strength evaluations from selected code to check the strength.')
 
 st.markdown("Please find the MATLAB code from: https://github.com/zzhuyii/Sim-FAST")
 
 st.text('The MATLAB code version can provide higher flexibility and check for more' + 
-        'design requirements.')
+        ' design requirements.')
 
 
 st.subheader("Select design code")
@@ -62,10 +62,10 @@ L = st.selectbox(
 
 st.subheader("Strength during deployment")
 
-st.text('Here, we check the truss strength during the deployment process.' + 
+st.text('Here, we check the truss strength during the deployment process. ' + 
         'You can change deployment ratio for different stage of deployment' +
-        'The load applied is the bridge self-weight with AASHTO factors for LRFD method.' +
-        'For AREMA ASD method, the load applied is the bridge self-weight.' +
+        'The load applied is the bridge self-weight with AASHTO factors for LRFD method. ' +
+        'For AREMA ASD method, the load applied is the bridge self-weight. ' +
         'The cross section are all assumed to be HSS 8X4X5/16.')
 
 DepRate = st.selectbox(
