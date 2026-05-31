@@ -1,12 +1,7 @@
 import os
 import numpy as np
 from Solver_NR_Loading import Solver_NR_Loading
-from scissor_common import (
-    bridge_self_weight,
-    build_scissor_model,
-    check_truss_lrfd,
-    local_buckling_message,
-)
+from scissor2_common import build_scissor2_model, bridge_self_weight, check_members
 
 
 OUT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -34,31 +29,13 @@ def set_improved_deployment_coordinates(model, dep_rate):
     return dL
 
 
-def check_members(model, U_end, An, r_val, Fy, Fu, Rp):
-    truss_strain = model.bar.solve_strain(model.node, U_end)
-    internal_force = truss_strain * model.bar.E_vec * model.bar.A_vec
-    Lc = model.bar.L0_vec.reshape(-1)
-    pass_yn = np.zeros(internal_force.size, dtype=bool)
-    dcr = np.full(internal_force.size, np.nan, dtype=float)
-    for j, Pu in enumerate(1.5 * internal_force):
-        passed, _, _, _, _, dcr_j = check_truss_lrfd(
-            Pu, model.bar.A_vec[j], An, model.bar.E_vec[j], Lc[j], r_val, Fy, Fu, Rp
-        )
-        pass_yn[j] = passed
-        dcr[j] = dcr_j
-    return truss_strain, pass_yn, dcr
 
-
-def write_summary(name, lines):
-    path = os.path.join(OUT_DIR, name)
-    with open(path, "w", encoding="utf-8") as f:
-        f.write("\n".join(lines) + "\n")
-    print(f"Saved: {path}")
 
 
 def improvedScissor_deploy(secNum,dep_rate,Lb):
 
-    model = build_scissor_model(variant="improved", analysis="load", N=secNum, L=Lb)
+    model = build_scissor2_model(N=secNum, L=Lb)
+    
     dL = set_improved_deployment_coordinates(model, dep_rate)
     model.assembly.Initialize_Assembly()
 
@@ -72,10 +49,7 @@ def improvedScissor_deploy(secNum,dep_rate,Lb):
     Rp = 1.0
     r_val = np.sqrt(Ix / barA)
 
-    _, lambda_r, buckling_status = local_buckling_message(E, Fy)
-    print("--- Local Buckling Check (AASHTO LRFD Art. 6.9.4.2) ---")
-    print(f"  lambda_r = {lambda_r:.2f}")
-    print(f"  {buckling_status}")
+
 
     L_total, W_bar = bridge_self_weight(model)
     W_deck = 2.0 * (0.03 + 10.0 / 50.0 * 0.2) * 16.0 * 1000.0 * 9.8
