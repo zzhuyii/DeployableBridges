@@ -73,7 +73,7 @@ def improvedScissor_deploy(secNum,dep_rate,Lb, designCode):
         nr.tol = 1.0e-5
         Uhis = nr.Solve()
         U_end = Uhis[-1]
-        truss_strain, pass_yn, dcr = check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp)
+        truss_strain, pass_yn, dcr = check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp, designCode)
         rot3.Solve_Global_Theta(node, U_end)
         moment_vec = np.abs(rot3.theta_current_vec - rot3.theta_stress_free_vec) * rot3.rot_spr_K_vec
         max_moment = 1.5 * float(np.max(moment_vec))
