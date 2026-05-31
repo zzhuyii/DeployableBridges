@@ -4,7 +4,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-from LRFD_Checks import check_truss_lrfd, local_buckling_pass
+from AASHTO_Checks import check_truss_lrfd, local_buckling_pass
 from Rolling_Bridge_common import build_rolling_bridge
 from Solver_NR_Loading import Solver_NR_Loading
 

@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from KirigamiTruss_common import build_kirigami_truss
-from LRFD_Checks import check_truss_lrfd, local_buckling_pass
+from AASHTO_Checks import check_truss_lrfd, local_buckling_pass
 from Solver_NR_Loading import Solver_NR_Loading
 
 

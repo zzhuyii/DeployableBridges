@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from KirigamiTruss_common import build_kirigami_truss
-from LRFD_Checks import check_truss_lrfd, local_buckling_pass
+from AASHTO_Checks import check_truss_lrfd, local_buckling_pass
 from Solver_NR_Loading import Solver_NR_Loading
 
 
@@ -78,7 +78,7 @@ def kirigami_deploy(L, N, dep_rate):
         panel_E=2.0e8, panel_t=0.01, panel_v=0.3,
         rot4K=1.0e7, rot3K=1.0e8,
     )
-    node.coordinates_mat = node.coordinates_mat + deployment_offset(node.coordinates_mat.shape[0], dep_rate, N)
+    node.coordinates_mat = node.coordinates_mat + deployment_offset(node.coordinates_mat.shape[0], dep_rate, N) * L/2.0
     assembly.Initialize_Assembly()
     L_total, W_bar = bar_length_and_weight(node, bar)
     W_deck = 2.0 * (0.03 + 10.0 / 50.0 * 0.2) * 16.0 * 1000.0 * 9.8
