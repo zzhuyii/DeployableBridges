@@ -121,6 +121,13 @@ class Plot_Scissor_Bridge:
         min_sx = float(np.min(bar_stress))
         max_sx = float(np.max(bar_stress))
         span = max(max_sx - min_sx, 1.0)
+        
+        for (n1,n2) in abar_connect:
+            p1 = deformNode[n1 - 1]
+            p2 = deformNode[n2 - 1]
+            ax.plot([p1[0], p2[0]], [p1[1], p2[1]], [p1[2], p2[2]],
+                    color='black', linewidth=2)
+
 
         for stress, (n1, n2) in zip(bar_stress, bar_connect):
             if stress > 4 / 5 * span + min_sx:
@@ -138,12 +145,6 @@ class Plot_Scissor_Bridge:
             ax.plot([p1[0], p2[0]], [p1[1], p2[1]], [p1[2], p2[2]],
                     color=color, linewidth=2)
             
-        for (n1,n2) in abar_connect:
-            p1 = deformNode[n1 - 1]
-            p2 = deformNode[n2 - 1]
-            ax.plot([p1[0], p2[0]], [p1[1], p2[1]], [p1[2], p2[2]],
-                    color='black', linewidth=2)
-
         legend_patches = [
             Patch(color="red", label="{:.1f} to {:.1f} MPa".format((4 / 5 * span + min_sx) / 1e6, max_sx / 1e6)),
             Patch(color="orange", label="{:.1f} to {:.1f} MPa".format((3 / 5 * span + min_sx) / 1e6, (4 / 5 * span + min_sx) / 1e6)),
