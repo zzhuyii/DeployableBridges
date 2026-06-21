@@ -103,6 +103,8 @@ class Plot_Scissor_Bridge:
         deformNode = node0 + U  # U is (N,3) numpy array
         bar_connect = self.assembly.bar.node_ij_mat
         
+        abar_connect = self.assembly.actBar.node_ij_mat
+        
         bar_stress = np.asarray(bar_stress, dtype=float).reshape(-1)
         fig, ax = self._setup_ax()
         self._plot_cst_faces(ax, deformNode, facecolor="yellow", alpha=0.5)
@@ -135,6 +137,12 @@ class Plot_Scissor_Bridge:
             p2 = deformNode[n2 - 1]
             ax.plot([p1[0], p2[0]], [p1[1], p2[1]], [p1[2], p2[2]],
                     color=color, linewidth=2)
+            
+        for (n1,n2) in abar_connect:
+            p1 = deformNode[n1 - 1]
+            p2 = deformNode[n2 - 1]
+            ax.plot([p1[0], p2[0]], [p1[1], p2[1]], [p1[2], p2[2]],
+                    color='black', linewidth=2)
 
         legend_patches = [
             Patch(color="red", label="{:.1f} to {:.1f} MPa".format((4 / 5 * span + min_sx) / 1e6, max_sx / 1e6)),
@@ -150,10 +158,18 @@ class Plot_Scissor_Bridge:
 
     def Plot_Shape_Bar_Failure(self, pass_yn,U_end):
         node0 = self.assembly.node.coordinates_mat
+        abar_connect = self.assembly.actBar.node_ij_mat
         deformedNode = node0 + U_end
         pass_yn = np.asarray(pass_yn, dtype=bool).reshape(-1)
         fig, ax = self._setup_ax()
         self._plot_cst_faces(ax, deformedNode, facecolor="yellow", alpha=0.45)
+        
+        for (n1,n2) in abar_connect:
+            p1 = deformedNode[n1 - 1]
+            p2 = deformedNode[n2 - 1]
+            ax.plot([p1[0], p2[0]], [p1[1], p2[1]], [p1[2], p2[2]],
+                    color='black', linewidth=2)
+        
         for passed, (n1, n2) in zip(pass_yn, np.asarray(self._bar())):
             p1 = deformedNode[self._to0(n1)]
             p2 = deformedNode[self._to0(n2)]
