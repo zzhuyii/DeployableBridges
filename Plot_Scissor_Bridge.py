@@ -164,7 +164,7 @@ class Plot_Scissor_Bridge:
         fig, ax = self._setup_ax()
         self._plot_cst_faces(ax, deformedNode, facecolor="yellow", alpha=0.45)
         
-        for (n1,n2) in abar_connect:
+        for (n1,n2) in zip(abar_connect):
             p1 = deformedNode[n1 - 1]
             p2 = deformedNode[n2 - 1]
             ax.plot([p1[0], p2[0]], [p1[1], p2[1]], [p1[2], p2[2]],
