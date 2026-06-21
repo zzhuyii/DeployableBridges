@@ -88,6 +88,7 @@ elif BridgeType=='origami':
     st.pyplot(fig1)
     st.pyplot(fig2)
 elif BridgeType=='scissor':   
+    st.text('The black lines represent linear actuators. ' )
     fig1,fig2,tip=scissor_deploy(N, DepRate, L, designCode)    
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
@@ -95,6 +96,7 @@ elif BridgeType=='scissor':
     st.pyplot(fig1)
     st.pyplot(fig2)
 elif BridgeType=='improved scissor':   
+    st.text('The black lines represent linear actuators. ' )
     fig1,fig2,tip=improvedScissor_deploy(N, DepRate, L, designCode)    
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")   
@@ -135,7 +137,8 @@ elif BridgeType=='origami':
     st.write(f"The load over self-weight of origami bridge is: {F/Weight:.2f}")
     st.pyplot(fig1)
     st.pyplot(fig2)
-elif BridgeType=='scissor':   
+elif BridgeType=='scissor':  
+    st.text('The black lines represent linear actuators. ' )
     fig1,fig2, F, Weight=scissor_fail(N, L, designCode)    
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")   
@@ -144,6 +147,7 @@ elif BridgeType=='scissor':
     st.pyplot(fig1)
     st.pyplot(fig2)
 elif BridgeType=='improved scissor':   
+    st.text('The black lines represent linear actuators. ' )
     fig1,fig2, F, Weight=improvedScissor_fail(N, L, designCode)    
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Failure.png")
     # st.image("Kirigami_Truss_Strength_During_Deploy_Bar_Stress.png")    
