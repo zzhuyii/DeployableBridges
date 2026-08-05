@@ -60,7 +60,7 @@ def kirigami_fail(L, N , designCode):
 
     nr.load = np.asarray(loads, dtype=float)
     nr.increStep = 1
-    nr.iterMax = 1
+    nr.iterMax = 2
     nr.tol = 1.0e-5
     
     Uhis = nr.Solve()
