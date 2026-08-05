@@ -71,7 +71,7 @@ def kirigami_fail(L, N , designCode):
     max_dcr = float(np.nanmax(dcr))
     
     # linearly scale the dcr so that the maximum bar has 1.0001 dcr (it fails)
-    factor=1.0001 / max_dcr
+    factor=1.05 / max_dcr
     total_F=factor*total_F
   
     # find the scaled truss strain and forces
