@@ -60,26 +60,28 @@ def scissor_deploy(secNum, dep_rate, Lb, designCode):
     Uhis = U_end = truss_strain = pass_yn = dcr = None
     total_F = 0.0
 
-    for step in range(1, 6):
-        force = (W_bar + W_deck) / node_num / 5.0 * step
-        nr.load = np.column_stack([np.arange(node_num), np.zeros(node_num), np.zeros(node_num), -force * np.ones(node_num)])
-        nr.increStep = 1
-        nr.iterMax = 50
-        nr.tol = 1.0e-5
-        Uhis = nr.Solve()
-        U_end = Uhis[-1]
-        truss_strain, pass_yn, dcr = check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp, designCode)
-        rot3.Solve_Global_Theta(node, U_end)
-        moment_vec = np.abs(rot3.theta_current_vec - rot3.theta_stress_free_vec) * rot3.rot_spr_K_vec
-        max_moment = 1.5 * float(np.max(moment_vec))
-        moment_capacity = Fy * Iy / 0.0762
-        total_F = node_num * force
-        safe = bool(np.all(pass_yn)) and moment_capacity > max_moment
-        history.append([step, total_F, float(np.nanmax(dcr)), max_moment, moment_capacity, 1.0 if safe else 0.0])
-        print(f"Step {step:2d} : {'All checks safe' if safe else 'Failure detected'}")
-        if not safe:
-            break
+    step = 1.0
+    
+    force = (W_bar + W_deck) / node_num / 5.0 * step
+    nr.load = np.column_stack([np.arange(node_num), np.zeros(node_num), np.zeros(node_num), -force * np.ones(node_num)])
+    nr.increStep = 1
+    nr.iterMax = 2
+    nr.tol = 1.0e-5
+    Uhis = nr.Solve()
+    
+    U_end = Uhis[-1]
+    U_end = U_end *5.0
+    
+    truss_strain, pass_yn, dcr = check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp, designCode)
+    rot3.Solve_Global_Theta(node, U_end)
+    moment_vec = np.abs(rot3.theta_current_vec - rot3.theta_stress_free_vec) * rot3.rot_spr_K_vec
+    max_moment = 1.5 * float(np.max(moment_vec))
+    moment_capacity = Fy * Iy / 0.0762
+    total_F = node_num * force
+    safe = bool(np.all(pass_yn)) and moment_capacity > max_moment
+    history.append([step, total_F, float(np.nanmax(dcr)), max_moment, moment_capacity, 1.0 if safe else 0.0])
 
+ 
 
     plots.viewAngle1=10
     plots.viewAngle2=-75 
