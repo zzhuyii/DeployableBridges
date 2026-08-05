@@ -186,6 +186,7 @@ def deployment_offset(node_count, dep_rate, N):
 def check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp, designCode):
     truss_strain = bar.solve_strain(node, U_end)
     internal_force = truss_strain * bar.E_vec * bar.A_vec
+    
     Lc = bar.L0_vec.reshape(-1)
     pass_yn = np.zeros(internal_force.size, dtype=bool)
     dcr = np.full(internal_force.size, np.nan, dtype=float)
