@@ -50,26 +50,38 @@ def rolling_fail(N,L, designCode):
     Uhis = U_end = truss_strain = pass_yn = dcr = None
     total_F = 0.0
 
-    for step in range(1, 101):
-        loads = []
-        total_F = 0.0
-        for k in range(1, N):
-            for node_id in [6 * (k - 1) + 3, 6 * (k - 1) + 5]:
-                loads.append([node_id - 1, 0.0, 0.0, -force * step])
-            total_F += force * 2.0 * step
+    step = 1
+    loads = []
+    total_F = 0.0
+    for k in range(1, N):
+        for node_id in [6 * (k - 1) + 3, 6 * (k - 1) + 5]:
+            loads.append([node_id - 1, 0.0, 0.0, -force * step])
+        total_F += force * 2.0 * step
 
-        nr.load = np.asarray(loads, dtype=float)
-        nr.increStep = 1
-        nr.iterMax = 50
-        nr.tol = 1.0e-5
-        Uhis = nr.Solve()
-        U_end = Uhis[-1]
-        truss_strain, pass_yn, dcr = check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp, designCode)
-        safe = bool(np.all(pass_yn))
-        history.append([step, total_F, float(np.nanmax(dcr)), 1.0 if safe else 0.0])
-        print(f"Step {step:2d} : {'All Truss Members Safe' if safe else 'Member Failure Detected'} (AASHTO LRFD)")
-        if not safe:
-            break
+    nr.load = np.asarray(loads, dtype=float)
+    nr.increStep = 1
+    nr.iterMax = 2
+    nr.tol = 1.0e-5
+    
+    Uhis = nr.Solve()
+    U_end = Uhis[-1]
+    
+    # Calculate the dcr at the current force level
+    truss_strain, pass_yn, dcr = check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp, designCode)
+    max_dcr = float(np.nanmax(dcr))
+    
+    # linearly scale the dcr so that the maximum bar has 1.05 dcr (it fails)
+    factor=1.05 / max_dcr
+    total_F=factor*total_F    
+    
+    # find the scaled truss strain and forces
+    U_end=factor*U_end
+    truss_strain, pass_yn, dcr = check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp, designCode)
+    max_dcr = float(np.nanmax(dcr))   
+    
+    safe = bool(np.all(pass_yn))
+    history.append([step, total_F, float(np.nanmax(dcr)), 1.0 if safe else 0.0])
+
 
     plots.view_angle1=10
     plots.view_angle2=-75
