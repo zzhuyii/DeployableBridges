@@ -49,23 +49,25 @@ def kirigami_deploy(L, N, dep_rate, designCode):
     Uhis = U_end = truss_strain = pass_yn = dcr = None
     total_F = 0.0
 
-    for step in range(1, 1):
-        force = (W_bar + W_deck) / node_num / 1.0 * step
-        nr.load = np.column_stack([
-            np.arange(node_num), np.zeros(node_num), np.zeros(node_num), -force * np.ones(node_num),
-        ])
-        nr.increStep = 1
-        nr.iterMax = 2
-        nr.tol = 1.0e-5
-        Uhis = nr.Solve()
-        U_end = Uhis[-1]
-        truss_strain, pass_yn, dcr = check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp, designCode)
-        total_F = node_num * force
-        safe = bool(np.all(pass_yn))
-        history.append([step, total_F, float(np.nanmax(dcr)), 1.0 if safe else 0.0])
-        print(f"Step {step:2d} : {'All Truss Members Safe' if safe else 'Member Failure Detected'} (AASHTO LRFD)")
-        if not safe:
-            break
+    step=1.0
+
+    force = (W_bar + W_deck) / node_num / 5.0 * step
+    nr.load = np.column_stack([
+        np.arange(node_num), np.zeros(node_num), np.zeros(node_num), -force * np.ones(node_num),
+    ])
+    nr.increStep = 1
+    nr.iterMax = 2
+    nr.tol = 1.0e-5
+    Uhis = nr.Solve()
+    
+    U_end = Uhis[-1]
+    U_end = U_end * 5.0
+    
+    truss_strain, pass_yn, dcr = check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp, designCode)
+    total_F = node_num * force
+    safe = bool(np.all(pass_yn))
+    history.append([step, total_F, float(np.nanmax(dcr)), 1.0 if safe else 0.0])
+    
         
     plots.view_angle1=10
     plots.view_angle2=-75
