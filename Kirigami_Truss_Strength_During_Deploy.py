@@ -49,13 +49,13 @@ def kirigami_deploy(L, N, dep_rate, designCode):
     Uhis = U_end = truss_strain = pass_yn = dcr = None
     total_F = 0.0
 
-    for step in range(1, 6):
+    for step in range(1, 1):
         force = (W_bar + W_deck) / node_num / 5.0 * step
         nr.load = np.column_stack([
             np.arange(node_num), np.zeros(node_num), np.zeros(node_num), -force * np.ones(node_num),
         ])
         nr.increStep = 1
-        nr.iterMax = 50
+        nr.iterMax = 1
         nr.tol = 1.0e-5
         Uhis = nr.Solve()
         U_end = Uhis[-1]
