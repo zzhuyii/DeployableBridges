@@ -116,10 +116,10 @@ st.subheader("Load to failure after deployment")
 
 st.text('Here we load the bridge all the way to failure. We will study' + 
         ' the capacity of the bridge and the efficiency of the bridge.' +
-        ' When bridge is short, failure may not happen after the software ' +
-        'reach the maximum 100 step for loading. Because an incremental ' +
-        'iterative nonlinear loading solver is used, finding ultimate ' +
-        'load can be slower.')
+        ' We used an linear solver in this case, unlike the associated' +
+        ' journal publication, which uses a Newton-Raphson solver.' +
+        ' Thus, the solution is faster for online APP but cannot capture' +
+        ' potential nonlinearity and global buckling.')
 
 if BridgeType=='kirigami':        
     fig1, fig2, F, Weight =kirigami_fail(L, N, designCode)    
