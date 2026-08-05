@@ -70,7 +70,7 @@ def kirigami_fail(L, N , designCode):
     truss_strain, pass_yn, dcr = check_members(bar, node, U_end, An, r_val, Fy, Fu, Rp, designCode)
     max_dcr = float(np.nanmax(dcr))
     
-    # linearly scale the dcr so that the maximum bar has 1.0001 dcr (it fails)
+    # linearly scale the dcr so that the maximum bar has 1.05 dcr (it fails)
     factor=1.05 / max_dcr
     total_F=factor*total_F
   
