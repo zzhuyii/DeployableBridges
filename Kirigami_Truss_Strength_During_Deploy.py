@@ -49,7 +49,7 @@ def kirigami_deploy(L, N, dep_rate, designCode):
     Uhis = U_end = truss_strain = pass_yn = dcr = None
     total_F = 0.0
 
-    for step in range(1, 5.0):
+    for step in range(1, 5):
         force = (W_bar + W_deck) / node_num / 5.0 * step
         nr.load = np.column_stack([
             np.arange(node_num), np.zeros(node_num), np.zeros(node_num), -force * np.ones(node_num),
